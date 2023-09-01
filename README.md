@@ -10,7 +10,6 @@ You can have an overview of our Spring Boot Server with the diagram below:
 
 ![spring-boot-jwt-authentication-spring-security-architecture](spring-boot-jwt-authentication-spring-security-architecture.png)
 
-```
 ## Configure Spring Datasource, JPA, App properties
 Open `src/main/resources/application.properties`
 - For PostgreSQL:
