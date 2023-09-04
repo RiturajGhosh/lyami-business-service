@@ -5,6 +5,7 @@
  */
 package com.lyami.v1.authentication.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +20,12 @@ public class DummyController {
   public static final String MODERATOR_ROLE_AUTHORIZER = "hasRole('MODERATOR')";
   public static final String USER_ROLE_AUTHORIZER = "hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')";
 
+  @Value("${test.key}")
+  private String testMessage;
+
   @GetMapping("/all")
   public String allAccess() {
-    return "This content will be available publicly for all the roles";
+    return "This content will be available publicly for all the roles"+testMessage;
   }
 
   @GetMapping("/user")
