@@ -33,6 +33,13 @@ public class WebSecurityConfig {
 
     private AuthInterceptor authInterceptor;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/v1/authenticate/**",
+            "/v1/dummy/all",
+            "/swagger-ui*/**",
+            "/v3/api-docs/**"
+    };
+
     @Autowired
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, AuthFailureHandlerInterceptor authFailureHandlerInterceptor,
                              AuthInterceptor authInterceptor) {
@@ -65,8 +72,7 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authFailureHandlerInterceptor))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/v1/authenticate/**").permitAll()
-                                .requestMatchers("/api/test/**").permitAll()
+                        auth.requestMatchers(AUTH_WHITELIST).permitAll()
                                 .anyRequest().authenticated()
                 );
         http.authenticationProvider(authenticationProvider());
