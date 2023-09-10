@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -101,9 +102,16 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<JwtResponse> refreshJwtToekn(JwtRefreshRequest jwtRequest) {
-        final var userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUserName());
-        final String token = jwtUtils.generateJwtToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(userDetails.getUsername(), token));
+        //need to implement try block here or in global exception handling need to add few more
+        //handlers. as with this impl if username is wrong we are getting 500; but there is no point in doing a db call here
+        //if it is failure it is unauthorized.--- that's the thought process
+        if (jwtRequest.getToken() != null && jwtUtils.validateJwtToken(jwtRequest.getToken())) {
+            final var userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUserName());
+            final String token = jwtUtils.generateJwtToken(userDetails);
+            return ResponseEntity.ok(new JwtResponse(userDetails.getUsername(), token));
+        }
+        //will remove the below line and need to implement one Unauth runtime custom exception and throw it from here
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     private void addUserRoleBasedOnInputReq(Set<String> inputRoles, Set<Role> roles) {
