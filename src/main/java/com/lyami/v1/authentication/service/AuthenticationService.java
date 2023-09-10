@@ -9,6 +9,7 @@ import com.lyami.v1.authentication.dto.UserDetailsImpl;
 import com.lyami.v1.authentication.dto.entity.ERole;
 import com.lyami.v1.authentication.dto.entity.Role;
 import com.lyami.v1.authentication.dto.entity.User;
+import com.lyami.v1.authentication.dto.request.JwtRefreshRequest;
 import com.lyami.v1.authentication.dto.request.LoginRequest;
 import com.lyami.v1.authentication.dto.request.SignupRequest;
 import com.lyami.v1.authentication.dto.response.JwtResponse;
@@ -26,6 +27,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +48,8 @@ public class AuthenticationService {
 
     private AuthenticationManager authenticationManager;
 
+    private UserDetailsService userDetailsService;
+
     private JwtUtils jwtUtils;
 
     @Value("${signup.invalid.username.alreadytaken}")
@@ -56,12 +60,13 @@ public class AuthenticationService {
 
     @Autowired
     public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder,
-                                 AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+                                 AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserDetailsService userDetailsService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
+        this.userDetailsService = userDetailsService;
     }
 
     public ResponseEntity<String> registerUserService(SignupRequest signUpRequest) throws LyamiBusinessException {
@@ -93,6 +98,12 @@ public class AuthenticationService {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
+    }
+
+    public ResponseEntity<JwtResponse> refreshJwtToekn(JwtRefreshRequest jwtRequest) {
+        final var userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUserName());
+        final String token = jwtUtils.generateJwtToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(userDetails.getUsername(), token));
     }
 
     private void addUserRoleBasedOnInputReq(Set<String> inputRoles, Set<Role> roles) {
