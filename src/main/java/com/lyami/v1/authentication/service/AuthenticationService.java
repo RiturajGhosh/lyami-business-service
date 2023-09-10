@@ -15,9 +15,11 @@ import com.lyami.v1.authentication.dto.response.JwtResponse;
 import com.lyami.v1.authentication.repository.RoleRepository;
 import com.lyami.v1.authentication.repository.UserRepository;
 import com.lyami.v1.authentication.util.JwtUtils;
+import com.lyami.v1.common.exception.LyamiBusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,6 +48,12 @@ public class AuthenticationService {
 
     private JwtUtils jwtUtils;
 
+    @Value("${signup.invalid.username.alreadytaken}")
+    private String invalidUserName;
+
+    @Value("${signup.invalid.email.alreadytaken}")
+    private String invalidEmail;
+
     @Autowired
     public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder,
                                  AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
@@ -56,12 +64,11 @@ public class AuthenticationService {
         this.jwtUtils = jwtUtils;
     }
 
-    public ResponseEntity<String> registerUserService(SignupRequest signUpRequest) {
+    public ResponseEntity<String> registerUserService(SignupRequest signUpRequest) throws LyamiBusinessException {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body("Error: Username is already taken!");
-            //better throw an exception and add a global exception handler
+            throw new LyamiBusinessException(invalidUserName);
         } else if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity.badRequest().body("Error: Email is already in use!");
+            throw new LyamiBusinessException(invalidEmail);
         } else {
             // Create new user's account
             User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),

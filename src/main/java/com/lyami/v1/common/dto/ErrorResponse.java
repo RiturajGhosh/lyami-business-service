@@ -10,11 +10,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @JsonInclude(Include.NON_NULL)
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ErrorResponse {
     private List<Error> errors;
 
