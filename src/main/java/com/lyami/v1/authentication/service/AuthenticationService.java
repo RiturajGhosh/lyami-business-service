@@ -5,6 +5,7 @@
  */
 package com.lyami.v1.authentication.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyami.v1.authentication.dto.UserDetailsImpl;
 import com.lyami.v1.authentication.dto.entity.ERole;
 import com.lyami.v1.authentication.dto.entity.Role;
@@ -17,8 +18,10 @@ import com.lyami.v1.authentication.repository.RoleRepository;
 import com.lyami.v1.authentication.repository.UserRepository;
 import com.lyami.v1.authentication.util.JwtUtils;
 import com.lyami.v1.common.exception.LyamiBusinessException;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -32,10 +35,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.lyami.v1.common.constants.ApplicationConstants.OTP_EXPIRY_DURATION_MS;
 
 @Slf4j
 @Service
@@ -50,6 +56,8 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
 
     private UserDetailsService userDetailsService;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private JwtUtils jwtUtils;
 
@@ -127,5 +135,53 @@ public class AuthenticationService {
     private void addFindRole(ERole roleUser, Set<Role> roles) {
         Role userRole = roleRepository.findByName(roleUser).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
         roles.add(userRole);
+    }
+
+    @SneakyThrows
+    public void verifyEmail(String emailId) {
+        /* if already signed up return some error message saying account already exists*/
+        if (isUserEmailSignedUp(emailId)) {
+            throw new LyamiBusinessException(invalidEmail);
+        }
+        //if all ok, generate a random 6 digit otp, store the encoded otp along with the email id with some expiry time, isSignedUp=false, isOtpVerified=false
+        String encodedOtp = encoder.encode(generateSixDigitOtp());
+        var user = mapUserDto(emailId, System.currentTimeMillis() + OTP_EXPIRY_DURATION_MS,
+                false, false, encodedOtp);
+        userRepository.save(user);
+        //put a message on kafka email-verify topic with the OTP and emailId
+        String payload = objectMapper.writeValueAsString(user);
+        //yet to implement kafka producer
+        //kafkaUtil.sendMessage(payload);
+        //give 204 no content after all the above steps
+    }
+
+    private User mapUserDto(String emailId, long time, boolean isSignedUp, boolean isOtpVerified, String otp) {
+        User user = new User();
+        user.setEmail(emailId);
+        user.setIsSignedUp(isSignedUp);
+        user.setIsOtpVerified(isOtpVerified);
+        user.setOtpExpiryTime(time);
+        user.setEmailVerificationOtp(otp);
+        return user;
+    }
+
+    private String generateSixDigitOtp() {
+        SecureRandom secureRandom = new SecureRandom();
+        return String.format("%06d", secureRandom.nextInt(1000000));
+    }
+
+    /**
+     * check if the email id already exists and isSignedUp = true.
+     *
+     * @param emailId
+     * @return true if email id is signed up user email
+     */
+    public boolean isUserEmailSignedUp(String emailId) {
+        var userDtoOptional = userRepository.findByEmail(emailId);
+        if (userDtoOptional.isPresent()) {
+            var user = userDtoOptional.get();
+            return BooleanUtils.isTrue(user.getIsSignedUp());
+        }
+        return false;
     }
 }

@@ -17,10 +17,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", 
-    uniqueConstraints = { 
+@Table(name = "users",
+    uniqueConstraints = {
       @UniqueConstraint(columnNames = "username"),
-      @UniqueConstraint(columnNames = "email") 
+      @UniqueConstraint(columnNames = "email")
     })
 @Data
 @AllArgsConstructor
@@ -43,9 +43,17 @@ public class User {
   @Size(max = 120)
   private String password;
 
+  private Boolean isSignedUp;
+
+  private Boolean isOtpVerified;
+
+  private String emailVerificationOtp;
+
+  private Long otpExpiryTime;
+
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(  name = "user_roles", 
-        joinColumns = @JoinColumn(name = "user_id"), 
+  @JoinTable(  name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
 
