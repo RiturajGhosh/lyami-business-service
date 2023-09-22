@@ -5,6 +5,9 @@
  */
 package com.lyami.v1.common.exception;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class LyamiBusinessException extends RuntimeException{
 
     public LyamiBusinessException(String message) {

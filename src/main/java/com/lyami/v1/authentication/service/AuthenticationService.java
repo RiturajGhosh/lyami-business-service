@@ -12,11 +12,13 @@ import com.lyami.v1.authentication.dto.entity.Role;
 import com.lyami.v1.authentication.dto.entity.User;
 import com.lyami.v1.authentication.dto.request.JwtRefreshRequest;
 import com.lyami.v1.authentication.dto.request.LoginRequest;
+import com.lyami.v1.authentication.dto.request.OTPVerificationRequest;
 import com.lyami.v1.authentication.dto.request.SignupRequest;
 import com.lyami.v1.authentication.dto.response.JwtResponse;
 import com.lyami.v1.authentication.repository.RoleRepository;
 import com.lyami.v1.authentication.repository.UserRepository;
 import com.lyami.v1.authentication.util.JwtUtils;
+import com.lyami.v1.common.event.producer.KafkaProducerService;
 import com.lyami.v1.common.exception.LyamiBusinessException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -61,21 +63,28 @@ public class AuthenticationService {
 
     private JwtUtils jwtUtils;
 
+    private KafkaProducerService kafkaProducerService;
+
     @Value("${signup.invalid.username.alreadytaken}")
     private String invalidUserName;
 
     @Value("${signup.invalid.email.alreadytaken}")
     private String invalidEmail;
 
+    @Value("${kafka.topic.name.emailverification}")
+    private String emailVerificationTopic;
+
     @Autowired
     public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder,
-                                 AuthenticationManager authenticationManager, JwtUtils jwtUtils, UserDetailsService userDetailsService) {
+                                 AuthenticationManager authenticationManager, JwtUtils jwtUtils,
+                                 UserDetailsService userDetailsService, KafkaProducerService kafkaProducerService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     public ResponseEntity<String> registerUserService(SignupRequest signUpRequest) throws LyamiBusinessException {
@@ -123,7 +132,7 @@ public class AuthenticationService {
     }
 
     private void addUserRoleBasedOnInputReq(Set<String> inputRoles, Set<Role> roles) {
-        inputRoles.forEach(role -> {
+        inputRoles.stream().forEach(role -> {
             switch (role) {
                 case "admin" -> addFindRole(ERole.ROLE_ADMIN, roles);
                 case "mod" -> addFindRole(ERole.ROLE_MODERATOR, roles);
@@ -139,24 +148,39 @@ public class AuthenticationService {
 
     @SneakyThrows
     public void verifyEmail(String emailId) {
+        User user = new User();
         /* if already signed up return some error message saying account already exists*/
-        if (isUserEmailSignedUp(emailId)) {
-            throw new LyamiBusinessException(invalidEmail);
-        }
+        user = validateAndGetNotSignedUpUser(emailId, user);
         //if all ok, generate a random 6 digit otp, store the encoded otp along with the email id with some expiry time, isSignedUp=false, isOtpVerified=false
         String encodedOtp = encoder.encode(generateSixDigitOtp());
-        var user = mapUserDto(emailId, System.currentTimeMillis() + OTP_EXPIRY_DURATION_MS,
+        user = mapUserDto(user, emailId, System.currentTimeMillis() + OTP_EXPIRY_DURATION_MS,
                 false, false, encodedOtp);
         userRepository.save(user);
         //put a message on kafka email-verify topic with the OTP and emailId
         String payload = objectMapper.writeValueAsString(user);
         //yet to implement kafka producer
-        //kafkaUtil.sendMessage(payload);
+        kafkaProducerService.sendMessage(emailVerificationTopic, payload);
         //give 204 no content after all the above steps
     }
 
-    private User mapUserDto(String emailId, long time, boolean isSignedUp, boolean isOtpVerified, String otp) {
-        User user = new User();
+    /**
+     * check if the email id already exists and isSignedUp = true.
+     *
+     * @param emailId
+     * @param user
+     * @return user if user is not signed up
+     */
+    private User validateAndGetNotSignedUpUser(String emailId, User user) {
+        var userDtoOptional = userRepository.findByEmail(emailId);
+        if (userDtoOptional.isPresent())  {
+            user = userDtoOptional.get();
+            if(BooleanUtils.isTrue(user.getIsSignedUp()))
+                throw new LyamiBusinessException(invalidEmail);
+        }
+        return user;
+    }
+
+    private User mapUserDto(User user, String emailId, long time, boolean isSignedUp, boolean isOtpVerified, String otp) {
         user.setEmail(emailId);
         user.setIsSignedUp(isSignedUp);
         user.setIsOtpVerified(isOtpVerified);
@@ -170,18 +194,21 @@ public class AuthenticationService {
         return String.format("%06d", secureRandom.nextInt(1000000));
     }
 
-    /**
-     * check if the email id already exists and isSignedUp = true.
-     *
-     * @param emailId
-     * @return true if email id is signed up user email
-     */
-    public boolean isUserEmailSignedUp(String emailId) {
-        var userDtoOptional = userRepository.findByEmail(emailId);
-        if (userDtoOptional.isPresent()) {
-            var user = userDtoOptional.get();
-            return BooleanUtils.isTrue(user.getIsSignedUp());
+    public void verifyOtp(OTPVerificationRequest otpVerificationRequest) {
+        //fetch the encoded otp and expiry time based on the email id
+        //if there is no record with the email id send some error message. no records found
+        var user = userRepository.findByEmail(otpVerificationRequest.getEmailId())
+                .orElseThrow(() -> new LyamiBusinessException(invalidEmail));
+        //else decode the otp, check if the expiry time is not over, match with the otp sent by the user
+        if (user.getOtpExpiryTime() < System.currentTimeMillis()) {
+            //if not matched, send wrong otp error message
+            if (!encoder.matches(otpVerificationRequest.getOtp(), user.getPassword())) {
+                throw new LyamiBusinessException();
+            }
         }
-        return false;
+        //update isOtpVerified in db to true.
+        user.setIsOtpVerified(true);
+        userRepository.save(user);
+        //send 204 no content to indicate successful otp verification
     }
 }
