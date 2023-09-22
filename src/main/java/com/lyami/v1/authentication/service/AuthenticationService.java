@@ -146,11 +146,16 @@ public class AuthenticationService {
         roles.add(userRole);
     }
 
+    /**
+     * Generates a 6 digit OTP and publishes the event to kafka,
+     * if user is not already signed up
+     *
+     * @param emailId
+     */
     @SneakyThrows
     public void verifyEmail(String emailId) {
-        User user = new User();
         /* if already signed up return some error message saying account already exists*/
-        user = validateAndGetNotSignedUpUser(emailId, user);
+        var user = validateAndGetNotSignedUpUser(emailId);
         //if all ok, generate a random 6 digit otp, store the encoded otp along with the email id with some expiry time, isSignedUp=false, isOtpVerified=false
         String encodedOtp = encoder.encode(generateSixDigitOtp());
         user = mapUserDto(user, emailId, System.currentTimeMillis() + OTP_EXPIRY_DURATION_MS,
@@ -160,21 +165,43 @@ public class AuthenticationService {
         String payload = objectMapper.writeValueAsString(user);
         //yet to implement kafka producer
         kafkaProducerService.sendMessage(emailVerificationTopic, payload);
-        //give 204 no content after all the above steps
+    }
+
+    /**
+     * Verify if the entered otp
+     *
+     * @param otpVerificationRequest
+     */
+    @SneakyThrows
+    public void verifyOtp(OTPVerificationRequest otpVerificationRequest) {
+        //fetch the encoded otp and expiry time based on the email id
+        //if there is no record with the email id send some error message. no records found
+        var user = userRepository.findByEmail(otpVerificationRequest.getEmailId())
+                .orElseThrow(() -> new LyamiBusinessException(invalidEmail));
+        //else decode the otp, check if the expiry time is not over, match with the otp sent by the user
+        if (user.getOtpExpiryTime() < System.currentTimeMillis()) {
+            //if not matched, send wrong otp error message
+            if (!encoder.matches(otpVerificationRequest.getOtp(), user.getEmailVerificationOtp())) {
+                throw new LyamiBusinessException();
+            }
+        }
+        //update isOtpVerified in db to true.
+        user.setIsOtpVerified(true);
+        userRepository.save(user);
     }
 
     /**
      * check if the email id already exists and isSignedUp = true.
      *
      * @param emailId
-     * @param user
      * @return user if user is not signed up
      */
-    private User validateAndGetNotSignedUpUser(String emailId, User user) {
+    private User validateAndGetNotSignedUpUser(String emailId) {
+        User user = new User();
         var userDtoOptional = userRepository.findByEmail(emailId);
-        if (userDtoOptional.isPresent())  {
+        if (userDtoOptional.isPresent()) {
             user = userDtoOptional.get();
-            if(BooleanUtils.isTrue(user.getIsSignedUp()))
+            if (BooleanUtils.isTrue(user.getIsSignedUp()))
                 throw new LyamiBusinessException(invalidEmail);
         }
         return user;
@@ -192,23 +219,5 @@ public class AuthenticationService {
     private String generateSixDigitOtp() {
         SecureRandom secureRandom = new SecureRandom();
         return String.format("%06d", secureRandom.nextInt(1000000));
-    }
-
-    public void verifyOtp(OTPVerificationRequest otpVerificationRequest) {
-        //fetch the encoded otp and expiry time based on the email id
-        //if there is no record with the email id send some error message. no records found
-        var user = userRepository.findByEmail(otpVerificationRequest.getEmailId())
-                .orElseThrow(() -> new LyamiBusinessException(invalidEmail));
-        //else decode the otp, check if the expiry time is not over, match with the otp sent by the user
-        if (user.getOtpExpiryTime() < System.currentTimeMillis()) {
-            //if not matched, send wrong otp error message
-            if (!encoder.matches(otpVerificationRequest.getOtp(), user.getPassword())) {
-                throw new LyamiBusinessException();
-            }
-        }
-        //update isOtpVerified in db to true.
-        user.setIsOtpVerified(true);
-        userRepository.save(user);
-        //send 204 no content to indicate successful otp verification
     }
 }

@@ -11,7 +11,7 @@ public class EmailIdValidator implements ConstraintValidator<ValidEmailId, Strin
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
     @Override
-    public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
-        return email != null && EMAIL_PATTERN.matcher(email).matches();
+    public boolean isValid(String emailId, ConstraintValidatorContext constraintValidatorContext) {
+        return emailId != null && EMAIL_PATTERN.matcher(emailId).matches();
     }
 }

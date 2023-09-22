@@ -57,9 +57,9 @@ public class AuthenticationController {
         authenticationService.verifyEmail(emailId);
     }
 
-    @PostMapping("verify/otp")
+    @PostMapping("/verify/otp")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void verifyOtp(@Valid OTPVerificationRequest otpVerificationRequest){
+    public void verifyOtp(@Valid @RequestBody OTPVerificationRequest otpVerificationRequest){
         authenticationService.verifyOtp(otpVerificationRequest);
     }
 
