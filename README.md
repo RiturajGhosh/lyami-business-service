@@ -57,3 +57,4 @@ INSERT INTO roles(name) VALUES('ROLE_ADMIN');
 zkserver  (to start zookeeper in local)
 .\bin\windows\kafka-server-start.bat .\config\server.properties   (to start kafka server in local)
 bin\kafka-topics.bat --create --topic EMAILVERIFICATION --partitions 2 --replication-factor 1 --bootstrap-server localhost:9092
+```
