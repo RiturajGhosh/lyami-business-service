@@ -9,6 +9,7 @@ package com.lyami.v1.authentication.service;
 import com.lyami.v1.authentication.dto.UserDetailsImpl;
 import com.lyami.v1.authentication.dto.entity.User;
 import com.lyami.v1.authentication.repository.UserRepository;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,7 +30,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found/not signed up with email: " + email));
+        if(BooleanUtils.isNotTrue(user.getIsSignedUp())){
+            throw new UsernameNotFoundException("User Not Found/ not signed up with email: " + email);
+        }
         return UserDetailsImpl.build(user);
     }
 

@@ -11,6 +11,7 @@ import com.lyami.v1.authentication.dto.request.OTPVerificationRequest;
 import com.lyami.v1.authentication.dto.request.SignupRequest;
 import com.lyami.v1.authentication.dto.response.JwtResponse;
 import com.lyami.v1.authentication.service.AuthenticationService;
+import com.lyami.v1.authentication.service.AuthenticationServiceImpl;
 import com.lyami.v1.common.validator.ValidEmailId;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -35,7 +36,7 @@ public class AuthenticationController {
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        authenticationService.registerUserV2(signUpRequest);
+        authenticationService.registerUser(signUpRequest);
     }
 
     @PostMapping("/signin")
