@@ -5,6 +5,8 @@
  */
 package com.lyami.v1.authentication.dto.request;
 
+import com.lyami.v1.common.validator.ValidEmailId;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JwtRefreshRequest {
-    private String userName;
+    @NotBlank
+    @ValidEmailId
+    private String email;
+    @NotBlank
     private String token;
 }

@@ -128,9 +128,10 @@ public class AuthenticationService {
         //handlers. as with this impl if username is wrong we are getting 500; but there is no point in doing a db call here
         //if it is failure it is unauthorized.--- that's the thought process
         if (jwtRequest.getToken() != null && jwtUtils.validateJwtToken(jwtRequest.getToken())) {
-            final var userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUserName());
+            final var userDetails = userDetailsService.loadUserByUsername(jwtRequest.getEmail());
             final String token = jwtUtils.generateJwtToken(userDetails);
-            return ResponseEntity.ok(new JwtResponse(userDetails.getUsername(), token));
+            final String email = ((UserDetailsImpl)userDetails).getEmail();
+            return ResponseEntity.ok(new JwtResponse(email, token));
         }
         //will remove the below line and need to implement one Unauth runtime custom exception and throw it from here
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
