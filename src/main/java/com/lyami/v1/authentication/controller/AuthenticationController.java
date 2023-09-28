@@ -9,6 +9,7 @@ import com.lyami.v1.authentication.dto.request.JwtRefreshRequest;
 import com.lyami.v1.authentication.dto.request.LoginRequest;
 import com.lyami.v1.authentication.dto.request.OTPVerificationRequest;
 import com.lyami.v1.authentication.dto.request.SignupRequest;
+import com.lyami.v1.authentication.dto.response.JwtResponse;
 import com.lyami.v1.authentication.service.AuthenticationService;
 import com.lyami.v1.common.validator.ValidEmailId;
 import jakarta.validation.Valid;
@@ -17,12 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/authenticate")
@@ -43,12 +39,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         return authenticationService.authenticateUser(loginRequest);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody JwtRefreshRequest jwtRequest) {
+    public ResponseEntity<JwtResponse> refreshToken(@RequestBody JwtRefreshRequest jwtRequest) {
         return authenticationService.refreshJwtToekn(jwtRequest);
     }
 
