@@ -37,8 +37,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        return authenticationService.registerUserService(signUpRequest);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+        authenticationService.registerUserV2(signUpRequest);
     }
 
     @PostMapping("/signin")
@@ -53,24 +54,13 @@ public class AuthenticationController {
 
     @PostMapping("/verify/email")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void verifyEmail(@RequestParam @NotBlank @ValidEmailId String emailId){
+    public void verifyEmail(@RequestParam @NotBlank @ValidEmailId String emailId) {
         authenticationService.verifyEmail(emailId);
     }
 
     @PostMapping("/verify/otp")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void verifyOtp(@Valid @RequestBody OTPVerificationRequest otpVerificationRequest){
+    public void verifyOtp(@Valid @RequestBody OTPVerificationRequest otpVerificationRequest) {
         authenticationService.verifyOtp(otpVerificationRequest);
     }
-
-   /* after otp verification is successful user will enter username, password,
-    from client side a req with email, password, username will come to server side,
-        1. fetch the record with the email id
-        2. If email id not present show no record found
-        3. else check if isSignedUp = true -> if yes then return account already exist
-        4. check if isOtpVerified = false -> if yes then return OTP verification required
-        5. save the user in db with isSignedUp= true, encoded password, username. role
-    */
-
-
 }

@@ -5,13 +5,15 @@
  */
 package com.lyami.v1.authentication.dto.request;
 
+import com.lyami.v1.common.validator.ValidEmailId;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class LoginRequest {
     @NotBlank
-    private String username;
+    @ValidEmailId
+    private String email;
     @NotBlank
     private String password;
 

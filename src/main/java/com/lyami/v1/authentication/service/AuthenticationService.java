@@ -109,8 +109,13 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<JwtResponse> authenticateUser(LoginRequest loginRequest) {
+        if(BooleanUtils.isNotTrue(userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(()-> new LyamiBusinessException())
+                .getIsSignedUp())){
+            throw new LyamiBusinessException();
+        }
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -178,6 +183,10 @@ public class AuthenticationService {
         //if there is no record with the email id send some error message. no records found
         var user = userRepository.findByEmail(otpVerificationRequest.getEmailId())
                 .orElseThrow(() -> new LyamiBusinessException(invalidEmail));
+        //if there is no otp expirytime in db throw exception
+        if (user.getOtpExpiryTime() == null) {
+            throw new LyamiBusinessException();
+        }
         //else decode the otp, check if the expiry time is not over, match with the otp sent by the user
         if (user.getOtpExpiryTime() < System.currentTimeMillis()) {
             //if not matched, send wrong otp error message
@@ -219,5 +228,44 @@ public class AuthenticationService {
     private String generateSixDigitOtp() {
         SecureRandom secureRandom = new SecureRandom();
         return String.format("%06d", secureRandom.nextInt(1000000));
+    }
+
+    /**
+     * Method for user sign up with Lyami
+     *
+     * After otp verification is successful user will enter username, password,
+     * from client side a req with email, password, username will come to server side,
+     * 1. fetch the record with the email id
+     * 2. If email id not present show no record found -> otp verification is imcomplete
+     * 3. else check if isSignedUp = true -> if yes then return account already exist
+     * 4. check if isOtpVerified = false -> if yes then return OTP verification required
+     * 5. save the user in db with isSignedUp= true, encoded password, username. role
+     *
+     * @param signupRequest
+     */
+    public void registerUserV2(SignupRequest signupRequest) {
+        User user = userRepository.findByEmail(signupRequest.getEmail())
+                .orElseThrow(() -> new LyamiBusinessException());
+        if (BooleanUtils.isTrue(user.getIsSignedUp())) {
+            throw new LyamiBusinessException();
+        } else if (BooleanUtils.isNotTrue(user.getIsOtpVerified())) {
+            throw new LyamiBusinessException();
+        }
+        user = mapUserNamePasswordRole(user, signupRequest);
+        user.setIsSignedUp(true);
+        userRepository.save(user);
+    }
+
+    private User mapUserNamePasswordRole(User user, SignupRequest signupRequest) {
+        user.setUsername(signupRequest.getUsername());
+        user.setPassword(encoder.encode(signupRequest.getPassword()));
+        Set<Role> roles = new HashSet<>();
+        if (CollectionUtils.isEmpty(signupRequest.getRole())) {
+            addFindRole(ERole.ROLE_USER, roles);
+        } else {
+            addUserRoleBasedOnInputReq(signupRequest.getRole(), roles);
+        }
+        user.setRoles(roles);
+        return user;
     }
 }
