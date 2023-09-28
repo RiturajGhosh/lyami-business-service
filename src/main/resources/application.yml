@@ -1,0 +1,54 @@
+application:
+  title: Lyami-Business-Service
+  version: 1.0.0
+kafka:
+  topic:
+    name:
+      emailverification: EMAILVERIFICATION
+lyami:
+  app:
+    jwtexpiryms: 1800000
+    jwtsecret: LyamiiDotComBharatMataKiJayJayShreeRamHarHarMahaDevJaySriKrishnaLetsDoIt
+server:
+  port: 8081
+spring:
+  datasource:
+    password: ALcoder
+    url: jdbc:mysql://localhost:3306/cargo_portal?useSSL=false
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        acks: all
+        auto:
+          register:
+            schemas: false
+        batch:
+          size: 32768
+        compression:
+          type: snappy
+        enable:
+          idempotence: true
+        linger:
+          ms: 20
+        retries: 1000
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  mail:
+    host: smtp.gmail.com
+    username: infinity.ocean000@gmail.com
+    password: hoow yofl burt lejv
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
