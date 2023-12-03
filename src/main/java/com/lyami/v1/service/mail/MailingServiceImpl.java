@@ -6,11 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class MailingServiceImpl implements MailingService{
+@EnableRetry
+public class MailingServiceImpl implements MailingService {
 
     private JavaMailSender javaMailSender;
 
@@ -20,6 +23,7 @@ public class MailingServiceImpl implements MailingService{
     }
 
     @Override
+    @Retryable(retryFor = {Exception.class}, maxAttempts = 3)
     public void sendEmail(String to, String from, String subject, String content) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper;
@@ -31,8 +35,6 @@ public class MailingServiceImpl implements MailingService{
             javaMailSender.send(message);
         } catch (MessagingException ex) {
             log.error("exception occurred", ex);
-        }catch (Exception ex){
-            log.error("ex", ex);
         }
     }
 }

@@ -14,7 +14,7 @@ server:
 spring:
   datasource:
     password: ALcoder
-    url: jdbc:mysql://localhost:3306/cargo_portal?useSSL=false
+    url: jdbc:mysql://localhost:3306/lyami-dev?useSSL=false
     username: root
   jpa:
     hibernate:
@@ -52,3 +52,9 @@ spring:
           auth: true
           starttls:
             enable: true
+retry:
+  maxattempts: 3
+  backoff:
+    initialinterval: 1000
+    maxinterval: 60000
+    intervalMultiplier: 2

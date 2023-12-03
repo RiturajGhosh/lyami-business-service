@@ -29,14 +29,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity handleArgumentNotValidException(MethodArgumentNotValidException ex) {
+        /* String[] msg = errorMsg.split("##");
+                    return new ErrorResponse.Error(Integer.parseInt(msg[1]), msg[0]);*/
         var response = ex.getBindingResult()
                 .getAllErrors()
                 .stream()
                 .flatMap(objectError -> Arrays.stream(objectError.getDefaultMessage().split(",")))
-                .map(errorMsg -> {
-                    String[] msg = errorMsg.split("##");
-                    return new ErrorResponse.Error(Integer.parseInt(msg[1]), msg[0]);
-                })
+                .map(GlobalExceptionHandler::parseError)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(Optional.of(response), HttpStatus.BAD_REQUEST);
     }
@@ -49,6 +48,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleException(Exception ex) {
+        log.error("Exception", ex);
         return new ResponseEntity(Optional.of(Collections.singletonList(new ErrorResponse.Error(FALLBACK_ERROR_CODE,
                 FALLBACK_ERROR_MSG))), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -56,6 +56,7 @@ public class GlobalExceptionHandler {
     private static ErrorResponse.Error parseError(String errorMessage) {
         try {
             if (StringUtils.isNotBlank(errorMessage)) {
+                log.info(errorMessage);
                 var message = errorMessage.split("##");
                 var errorCode = message.length > 1 ? Integer.parseInt(message[1]) : FALLBACK_ERROR_CODE;
                 return new ErrorResponse.Error(errorCode, message[0]);
