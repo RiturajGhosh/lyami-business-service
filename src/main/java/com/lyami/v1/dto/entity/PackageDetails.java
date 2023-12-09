@@ -1,5 +1,7 @@
 package com.lyami.v1.dto.entity;
 
+import com.lyami.v1.dto.entity.commons.Currency;
+import com.lyami.v1.dto.entity.commons.Image;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

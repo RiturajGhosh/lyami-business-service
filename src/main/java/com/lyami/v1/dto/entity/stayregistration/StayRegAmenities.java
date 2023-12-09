@@ -1,7 +1,7 @@
-package com.lyami.v1.dto.entity;
+package com.lyami.v1.dto.entity.stayregistration;
 
+import com.lyami.v1.dto.entity.commons.Amenity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 

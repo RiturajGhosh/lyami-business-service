@@ -34,8 +34,6 @@ public class StayRegistrationRequest {
     private String opsContact;
     @NotNull(groups = StayRegistrationRequestFieldValidatorGroup.class)
     private Set<Amenities> amenities;
-    /*@NotNull(groups = StayRegistrationRequestFieldValidatorGroup.class)
-    private List<MultipartFile> imageFiles;*/
 
 
     @Getter

@@ -5,7 +5,7 @@
  */
 package com.lyami.v1.repository;
 
-import com.lyami.v1.dto.entity.User;
+import com.lyami.v1.dto.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

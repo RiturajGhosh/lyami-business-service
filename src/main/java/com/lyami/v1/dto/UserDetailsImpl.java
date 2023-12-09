@@ -6,7 +6,7 @@
 package com.lyami.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lyami.v1.dto.entity.User;
+import com.lyami.v1.dto.entity.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

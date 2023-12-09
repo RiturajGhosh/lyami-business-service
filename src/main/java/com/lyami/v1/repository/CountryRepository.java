@@ -1,6 +1,6 @@
 package com.lyami.v1.repository;
 
-import com.lyami.v1.dto.entity.Country;
+import com.lyami.v1.dto.entity.commons.Country;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

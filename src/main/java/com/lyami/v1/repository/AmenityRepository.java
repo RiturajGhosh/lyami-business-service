@@ -1,6 +1,6 @@
 package com.lyami.v1.repository;
 
-import com.lyami.v1.dto.entity.Amenity;
+import com.lyami.v1.dto.entity.commons.Amenity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

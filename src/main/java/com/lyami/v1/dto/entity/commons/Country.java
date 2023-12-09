@@ -1,4 +1,4 @@
-package com.lyami.v1.dto.entity;
+package com.lyami.v1.dto.entity.commons;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,15 +6,14 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
+@Entity
 @Getter
 @Setter
-@Entity
-public class Amenity implements Serializable {
+public class Country implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-    private String label;
     private Integer displayCode;
-
+    private String countryName;
 }

@@ -3,7 +3,7 @@
  * All rights are reserved. Unauthorized use, reproduction,
  * or distribution of this code is strictly prohibited.
  */
-package com.lyami.v1.dto.entity;
+package com.lyami.v1.dto.entity.user;
 
 public enum ERole {
   ROLE_USER,

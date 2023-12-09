@@ -1,6 +1,6 @@
-package com.lyami.v1.service.hostel;
+package com.lyami.v1.service.stayregistration;
 
-import com.lyami.v1.dto.entity.StayRegImage;
+import com.lyami.v1.dto.entity.stayregistration.StayRegImage;
 import com.lyami.v1.dto.request.StayRegistrationRequest;
 import com.lyami.v1.mapper.StayRegistrationMapper;
 import com.lyami.v1.repository.StayRegAmenityRepository;

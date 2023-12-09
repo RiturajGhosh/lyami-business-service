@@ -5,8 +5,8 @@
  */
 package com.lyami.v1.repository;
 
-import com.lyami.v1.dto.entity.ERole;
-import com.lyami.v1.dto.entity.Role;
+import com.lyami.v1.dto.entity.user.ERole;
+import com.lyami.v1.dto.entity.user.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

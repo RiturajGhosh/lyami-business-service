@@ -1,4 +1,4 @@
-package com.lyami.v1.service.hostel;
+package com.lyami.v1.service.stayregistration;
 
 import com.lyami.v1.dto.request.StayRegistrationRequest;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,6 @@
-package com.lyami.v1.dto.entity;
+package com.lyami.v1.dto.entity.stayregistration;
 
+import com.lyami.v1.dto.entity.commons.Country;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

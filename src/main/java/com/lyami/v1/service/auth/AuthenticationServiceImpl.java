@@ -7,9 +7,9 @@ package com.lyami.v1.service.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lyami.v1.dto.UserDetailsImpl;
-import com.lyami.v1.dto.entity.ERole;
-import com.lyami.v1.dto.entity.Role;
-import com.lyami.v1.dto.entity.User;
+import com.lyami.v1.dto.entity.user.ERole;
+import com.lyami.v1.dto.entity.user.Role;
+import com.lyami.v1.dto.entity.user.User;
 import com.lyami.v1.dto.request.JwtRefreshRequest;
 import com.lyami.v1.dto.request.LoginRequest;
 import com.lyami.v1.dto.request.OTPVerificationRequest;

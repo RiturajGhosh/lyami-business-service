@@ -7,7 +7,7 @@ package com.lyami.v1.service.auth;
 
 
 import com.lyami.v1.dto.UserDetailsImpl;
-import com.lyami.v1.dto.entity.User;
+import com.lyami.v1.dto.entity.user.User;
 import com.lyami.v1.repository.UserRepository;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

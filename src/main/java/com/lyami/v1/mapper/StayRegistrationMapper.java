@@ -1,8 +1,8 @@
 package com.lyami.v1.mapper;
 
-import com.lyami.v1.dto.entity.Country;
-import com.lyami.v1.dto.entity.StayRegAmenities;
-import com.lyami.v1.dto.entity.StayRegistration;
+import com.lyami.v1.dto.entity.commons.Country;
+import com.lyami.v1.dto.entity.stayregistration.StayRegAmenities;
+import com.lyami.v1.dto.entity.stayregistration.StayRegistration;
 import com.lyami.v1.dto.request.StayRegistrationRequest;
 import com.lyami.v1.exception.LyamiBusinessException;
 import com.lyami.v1.repository.AmenityRepository;

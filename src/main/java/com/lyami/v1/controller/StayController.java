@@ -1,11 +1,9 @@
 package com.lyami.v1.controller;
 
-import com.lyami.v1.dto.entity.StayRegImage;
 import com.lyami.v1.dto.request.StayRegistrationRequest;
-import com.lyami.v1.service.hostel.StayService;
+import com.lyami.v1.service.stayregistration.StayService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
