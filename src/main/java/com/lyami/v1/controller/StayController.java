@@ -1,5 +1,6 @@
 package com.lyami.v1.controller;
 
+import com.lyami.v1.dto.request.StayRegistrationImageRequest;
 import com.lyami.v1.dto.request.StayRegistrationRequest;
 import com.lyami.v1.service.stayregistration.StayService;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/stay")
 public class StayController {
 
@@ -37,7 +39,7 @@ public class StayController {
 
     @PostMapping("/uploadimage/{registrationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void uploadStayRegistrationImages(@PathVariable("registrationId") String registrationId, @NotNull List<MultipartFile> files) throws IOException {
+    public void uploadStayRegistrationImages(@PathVariable("registrationId") String registrationId, @NotNull List<StayRegistrationImageRequest> files) throws IOException {
         stayService.uploadImages(registrationId, files);
     }
 }

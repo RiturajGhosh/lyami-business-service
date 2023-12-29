@@ -20,6 +20,7 @@ public class StayRegImage implements Serializable {
     private String fileName;
     private String fileType;
     private Integer stayRegistrationId;
+    private int imageType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stayRegistrationId", referencedColumnName = "id", updatable = false, insertable = false)

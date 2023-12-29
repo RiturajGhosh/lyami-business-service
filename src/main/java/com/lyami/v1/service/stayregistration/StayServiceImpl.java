@@ -1,6 +1,7 @@
 package com.lyami.v1.service.stayregistration;
 
 import com.lyami.v1.dto.entity.stayregistration.StayRegImage;
+import com.lyami.v1.dto.request.StayRegistrationImageRequest;
 import com.lyami.v1.dto.request.StayRegistrationRequest;
 import com.lyami.v1.mapper.StayRegistrationMapper;
 import com.lyami.v1.repository.StayRegAmenityRepository;
@@ -48,17 +49,10 @@ public class StayServiceImpl implements StayService {
     }
 
     @Override
-    public void uploadImages(String registrationId, List<MultipartFile> multipartFileList) {
-        var imageFileEntities = multipartFileList.stream().map(file -> {
-                    var stayRegImage = new StayRegImage();
+    public void uploadImages(String registrationId, List<StayRegistrationImageRequest> stayRegistrationImageRequests) {
+        var imageFileEntities = stayRegistrationImageRequests.stream().map(fileReq -> {
+                    var stayRegImage =stayRegistrationMapper.mapStayRegImageReqToEntity(fileReq);
                     stayRegImage.setStayRegistrationId(Integer.parseInt(registrationId));
-                    stayRegImage.setFileType(file.getContentType());
-                    stayRegImage.setFileName(file.getOriginalFilename());
-                    try {
-                        stayRegImage.setImageData(file.getBytes());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
                     return stayRegImage;
                 })
                 .collect(Collectors.toList());
