@@ -8,5 +8,7 @@ package com.lyami.v1.dto.entity.user;
 public enum ERole {
   ROLE_USER,
   ROLE_MODERATOR,
-  ROLE_ADMIN
+  ROLE_ADMIN,
+  ROLE_HOTEL,
+  ROLE_HOSTEL
 }

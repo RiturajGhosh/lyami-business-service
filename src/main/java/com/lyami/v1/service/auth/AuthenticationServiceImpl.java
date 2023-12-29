@@ -238,6 +238,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             switch (role) {
                 case "admin" -> addFindRole(ERole.ROLE_ADMIN, roles);
                 case "mod" -> addFindRole(ERole.ROLE_MODERATOR, roles);
+                case "hostel" -> addFindRole(ERole.ROLE_HOSTEL, roles);
+                case "hotel" -> addFindRole(ERole.ROLE_HOTEL, roles);
                 default -> addFindRole(ERole.ROLE_USER, roles);
             }
         });
