@@ -13,6 +13,7 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,17 +56,7 @@ public abstract class StayRegistrationMapper {
 
     @Named("mapImageData")
     byte[] mapImageData(StayRegistrationImageRequest stayRegistrationImageRequest) throws IOException {
-        return stayRegistrationImageRequest.getFile().getBytes();
-    }
-
-    @Named("mapFileName")
-    String mapFileName(StayRegistrationImageRequest stayRegistrationImageRequest) {
-        return stayRegistrationImageRequest.getFile().getOriginalFilename();
-    }
-
-    @Named("mapFileType")
-    String mapFileType(StayRegistrationImageRequest stayRegistrationImageRequest) {
-        return stayRegistrationImageRequest.getFile().getContentType();
+        return Base64.getDecoder().decode(stayRegistrationImageRequest.getFile());
     }
 
     @Named("mapImageType")
@@ -79,8 +70,6 @@ public abstract class StayRegistrationMapper {
     public abstract StayRegistration mapStayRegistrationReqToEntity(StayRegistrationRequest stayRegistrationRequest);
 
     @Mapping(target = "imageData", source = "stayRegistrationImageRequest", qualifiedByName = "mapImageData")
-    @Mapping(target = "fileName", source = "stayRegistrationImageRequest", qualifiedByName = "mapFileName")
-    @Mapping(target = "fileType", source = "stayRegistrationImageRequest", qualifiedByName = "mapFileType")
     @Mapping(target = "imageType", source = "type", qualifiedByName = "mapImageType")
     public abstract StayRegImage mapStayRegImageReqToEntity(StayRegistrationImageRequest stayRegistrationImageRequest);
 }

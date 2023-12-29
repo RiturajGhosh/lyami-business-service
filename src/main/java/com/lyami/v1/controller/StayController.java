@@ -39,7 +39,8 @@ public class StayController {
 
     @PostMapping("/uploadimage/{registrationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void uploadStayRegistrationImages(@PathVariable("registrationId") String registrationId, @NotNull List<StayRegistrationImageRequest> files) throws IOException {
+    public void uploadStayRegistrationImages(@PathVariable("registrationId") String registrationId,
+                                             @RequestBody @NotNull List<StayRegistrationImageRequest> files) throws IOException {
         stayService.uploadImages(registrationId, files);
     }
 }

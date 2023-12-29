@@ -1,6 +1,5 @@
 package com.lyami.v1.service.stayregistration;
 
-import com.lyami.v1.dto.entity.stayregistration.StayRegImage;
 import com.lyami.v1.dto.request.StayRegistrationImageRequest;
 import com.lyami.v1.dto.request.StayRegistrationRequest;
 import com.lyami.v1.mapper.StayRegistrationMapper;
@@ -10,9 +9,7 @@ import com.lyami.v1.repository.StayRegisterRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 

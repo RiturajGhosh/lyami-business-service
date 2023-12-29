@@ -1,14 +1,21 @@
 package com.lyami.v1.dto.request;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class StayRegistrationImageRequest {
     @NotNull
-    private MultipartFile file;
+    private String file;
+    @NotNull
+    private String fileName;
+    @NotNull
+    private String fileType;
     @NotNull
     private ImageRegType type;
 
