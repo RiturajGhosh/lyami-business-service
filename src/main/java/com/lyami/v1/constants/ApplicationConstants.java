@@ -2,6 +2,10 @@ package com.lyami.v1.constants;
 
 public class ApplicationConstants {
 
+    public static final String ADMIN_ROLE_AUTHORIZER = "hasRole('ADMIN')";
+    public static final String MODERATOR_ROLE_AUTHORIZER = "hasRole('MODERATOR')";
+    public static final String USER_ROLE_AUTHORIZER = "hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')";
+    public static final String STAY_USER_ROLE_AUTHORIZER = "hasRole('HOSTEL') or hasRole('HOTEL')";
     public static Long OTP_EXPIRY_DURATION_MS = Long.valueOf(5 * 60000);
     public static String OTP_MAIL_SUBJECT = "Lyami mail verification OTP";
     public static String OTP_MAIL_HTML = "<!DOCTYPE html>\n" +
@@ -57,4 +61,6 @@ public class ApplicationConstants {
             "    </div>\n" +
             "</body>\n" +
             "</html>\n";
+
+    public static String ACCESS_DENIED_EXCEPTION_MSG = "Access Denied##401";
 }

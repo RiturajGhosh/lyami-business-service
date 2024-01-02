@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.lyami.v1.constants.ApplicationConstants.ACCESS_DENIED_EXCEPTION_MSG;
 
 @Slf4j
 @RestControllerAdvice
@@ -66,5 +69,12 @@ public class GlobalExceptionHandler {
             return new ErrorResponse.Error(FALLBACK_ERROR_CODE, FALLBACK_ERROR_MSG);
         }
         return new ErrorResponse.Error(FALLBACK_ERROR_CODE, FALLBACK_ERROR_MSG);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity handleAuthorizationException(AccessDeniedException ex) {
+        log.info(ex.getMessage());
+        var errorResponse = new ErrorResponse(List.of(parseError(ACCESS_DENIED_EXCEPTION_MSG)));
+        return new ResponseEntity<>(Optional.of(errorResponse), HttpStatus.BAD_REQUEST);
     }
 }
