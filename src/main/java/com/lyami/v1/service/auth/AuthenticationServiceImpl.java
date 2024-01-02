@@ -79,6 +79,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Value("${kafka.topic.name.emailverification}")
     private String emailVerificationTopic;
 
+    @Value("${signup.expired.otp}")
+    private String otpExpiredMsg;
+
+    @Value("${signup.otp.notverified}")
+    private String otpNotVerifiedMsg;
+
+    @Value("${signup.email.notfound}")
+    private String emailNotFoundMsg;
+
     @Autowired
     public AuthenticationServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder,
                                      AuthenticationManager authenticationManager, JwtUtils jwtUtils,
@@ -142,7 +151,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String payload = objectMapper.writeValueAsString(user);
         //yet to implement kafka producer - We are thinking to downgrade the perfx as we don't have customer base and thus we can optimize cloud cost
         //we want to decomission the kafka service, and implement all things synchronously, we are expecting max 0.20 TPS
-       // kafkaProducerService.sendMessage(emailVerificationTopic, payload);
+        // kafkaProducerService.sendMessage(emailVerificationTopic, payload);
         String mailContent = OTP_MAIL_HTML.replace("{{otp}}", generatedOTP);
         mailingService.sendEmail(emailId, "infinity.ocean000@gmail.com", OTP_MAIL_SUBJECT, mailContent);
     }
@@ -158,17 +167,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         //fetch the encoded otp and expiry time based on the email id
         //if there is no record with the email id send some error message. no records found
         var user = userRepository.findByEmail(otpVerificationRequest.getEmailId())
-                .orElseThrow(() -> new LyamiBusinessException(invalidEmail));
-        //if there is no otp expirytime in db throw exception
-        if (user.getOtpExpiryTime() == null) {
-            throw new LyamiBusinessException();
+                .orElseThrow(() -> new LyamiBusinessException(emailNotFoundMsg));
+        if(isOtpExpired(user.getOtpExpiryTime())){
+            throw new LyamiBusinessException(otpExpiredMsg);
         }
-        //else decode the otp, check if the expiry time is not over, match with the otp sent by the user
-        if (user.getOtpExpiryTime() < System.currentTimeMillis()) {
-            //if not matched, send wrong otp error message
-            if (!encoder.matches(otpVerificationRequest.getOtp(), user.getEmailVerificationOtp())) {
-                throw new LyamiBusinessException();
-            }
+        //else decode the otp, match with the otp sent by the user
+        //if not matched, send wrong otp error message
+        if (!encoder.matches(otpVerificationRequest.getOtp(), user.getEmailVerificationOtp())) {
+            throw new LyamiBusinessException(otpExpiredMsg);
         }
         //update isOtpVerified in db to true.
         user.setIsOtpVerified(true);
@@ -211,9 +217,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByEmail(signupRequest.getEmail())
                 .orElseThrow(() -> new LyamiBusinessException());
         if (BooleanUtils.isTrue(user.getIsSignedUp())) {
-            throw new LyamiBusinessException();
+            throw new LyamiBusinessException(invalidEmail);
         } else if (BooleanUtils.isNotTrue(user.getIsOtpVerified())) {
-            throw new LyamiBusinessException();
+            throw new LyamiBusinessException(otpNotVerifiedMsg);
         }
         user = mapUserNamePasswordRole(user, signupRequest);
         user.setIsSignedUp(true);
@@ -262,6 +268,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private String generateSixDigitOtp() {
         SecureRandom secureRandom = new SecureRandom();
         return String.format("%06d", secureRandom.nextInt(1000000));
+    }
+
+    /**
+     * Method to check if the OTP is expired
+     *
+     * @param otpExpiryTime
+     */
+    private boolean isOtpExpired(Long otpExpiryTime) {
+        //if there is no otp expirytime in db return false
+        //check if the expiry time is not over
+        return otpExpiryTime == null || otpExpiryTime <= System.currentTimeMillis();
     }
 
 
