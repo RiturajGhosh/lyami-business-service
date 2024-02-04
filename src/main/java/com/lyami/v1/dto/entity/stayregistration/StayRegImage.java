@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Entity
 @Getter
 @Setter
-public class StayRegImage implements Serializable {
+public class  StayRegImage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
