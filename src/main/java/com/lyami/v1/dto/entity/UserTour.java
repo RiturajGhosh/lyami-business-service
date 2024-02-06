@@ -1,13 +1,11 @@
 package com.lyami.v1.dto.entity;
 
-import com.lyami.v1.dto.entity.user.UserDetails;
-
-import java.util.Set;
+import com.lyami.v1.dto.entity.user.UserBusinessDetails;
 
 public class UserTour {
     //primary key
     private int id;
-    private UserDetails userDetails;
+    private UserBusinessDetails userBusinessDetails;
     private SoldPackage soldPackage;
 
 }

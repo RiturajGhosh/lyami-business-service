@@ -2,17 +2,25 @@ package com.lyami.v1.dto.entity.user;
 
 import com.lyami.v1.dto.entity.SoldPackage;
 import com.lyami.v1.dto.entity.commons.Address;
+import com.lyami.v1.dto.entity.commons.Country;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.Set;
 
-public class UserDetails {
+@Entity
+@Getter
+@Setter
+public class UserBusinessDetails {
     //primary key
-    private int userDetailsId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userDetailsId;
     //1:1 relation with User table- user table is primarily used for authentication and authorization purpose
+    @OneToOne
+    @JoinColumn(name = "userDetailsId", referencedColumnName = "id", insertable = false, updatable = false )
     private User user;
     @Embedded
     private Address address;
@@ -32,6 +40,10 @@ public class UserDetails {
             inverseJoinColumns = {@JoinColumn(name = "soldPackageId")}
     )
     private Set<SoldPackage> soldPackageSet;
+
+    @ManyToOne
+    @JoinColumn(name = "userDetailsId", referencedColumnName = "id", insertable = false, updatable = false)
+    private Country country;
 
     @Getter
     public enum Gender{
