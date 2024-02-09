@@ -1,15 +1,13 @@
 package com.lyami.v1.validator;
 
+import java.util.Arrays;
+
+import com.lyami.v1.dto.request.UserRegistrationRequest.Gender;
+
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.util.Arrays;
-import java.util.regex.Pattern;
-
-import com.lyami.v1.dto.request.UserRegistration.Gender;
-
 public class GenderValidator implements ConstraintValidator<ValidGender, Gender> {
-
 
 	private Gender[] subset;
 	
