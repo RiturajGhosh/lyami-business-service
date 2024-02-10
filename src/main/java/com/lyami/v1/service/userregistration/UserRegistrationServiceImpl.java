@@ -7,8 +7,6 @@ import com.lyami.v1.exception.LyamiBusinessException;
 import com.lyami.v1.mapper.UserRegistrationMapper;
 import com.lyami.v1.repository.UserRegisterRepository;
 
-import lombok.SneakyThrows;
-
 public class UserRegistrationServiceImpl implements UserRegistrationService{
 
 	private UserRegisterRepository userRegisterRepository;
@@ -28,7 +26,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 	 *  
 	 */
 	@Override
-	@SneakyThrows
 	public void registerUser(UserRegistrationRequest userRegistrationRequest) {
 		// TODO Auto-generated method stub
 		var userBusinessDetails = userRegisterRepository.findByEmail(
