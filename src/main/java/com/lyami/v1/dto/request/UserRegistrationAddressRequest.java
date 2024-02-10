@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class UserAddressRequest {
+public class UserRegistrationAddressRequest {
   @NotBlank
   private String houseNumber;
   

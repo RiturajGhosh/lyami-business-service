@@ -7,6 +7,7 @@ import com.lyami.v1.validator.ValidGender;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,12 +18,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRegistrationRequest {
-  private UserAddressRequest userAddress;
+  private UserRegistrationAddressRequest address;
   
   @NotBlank(message = "{test.key}")
   @Size(max = 50)
   @Email
-  private String emailID;
+  private String email;
   
   @NotBlank
   @Size(max = 10)
@@ -30,23 +31,23 @@ public class UserRegistrationRequest {
   
   @NotBlank
   @Size(min = 3, max = 20)
-  private String firstName;
+  private String userFirstName;
   
   @NotBlank
   @Size(min = 3, max = 20)
-  private String lastName;
+  private String userLastName;
   
   @NotBlank
   @DateTimeFormat(pattern = "DD-MM-YYYY")
-  private String dateOfBirth;
+  private String birthDate;
   
   @ValidGender(anyOf = {Gender.MALE, Gender.FEMALE, Gender.OTHER})
   private Gender gender;
   
   private String bloodGroup;
   
-  @NotBlank
-  private String country;
+  @NotNull
+  private UserCountryRequest country;
   
   @Getter
   public enum Gender{
