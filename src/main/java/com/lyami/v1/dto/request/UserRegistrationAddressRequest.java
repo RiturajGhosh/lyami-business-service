@@ -5,18 +5,19 @@ import lombok.Data;
 
 @Data
 public class UserRegistrationAddressRequest {
-  @NotBlank
+  
+  @NotBlank(message = "{userregistration.address.housenumber.required}")
   private String houseNumber;
   
-  @NotBlank
+  @NotBlank(message = "{userregistration.address.street.required}")
   private String street;
   
-  @NotBlank
+  @NotBlank(message = "{userregistration.address.city.required}")
   private String city;
   
-  @NotBlank
+  @NotBlank(message = "{userregistration.address.state.required}")
   private String state;
   
-  @NotBlank
+  @NotBlank(message = "{userregistration.address.pincode.required}")
   private String pincode;
 }

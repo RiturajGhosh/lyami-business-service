@@ -2,12 +2,10 @@ package com.lyami.v1.dto.request;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.lyami.v1.dto.request.StayRegistrationImageRequest.ImageRegType;
 import com.lyami.v1.validator.ValidGender;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,26 +16,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRegistrationRequest {
+  
   private UserRegistrationAddressRequest address;
   
-  @NotBlank(message = "{test.key}")
-  @Size(max = 50)
-  @Email
+  @NotBlank(message = "{userregistration.email.required}")
+  @Email(message = "{userregistration.email.notvalid}")
   private String email;
   
-  @NotBlank
-  @Size(max = 10)
+  @NotBlank(message = "{userregistration.phoneNumber.required}")
+  @Size(max = 10, message = "{userregistration.phoneNumber.maxlength}")
   private String phoneNumber;
   
-  @NotBlank
-  @Size(min = 3, max = 20)
+  @NotBlank(message = "{userregistration.firstname.required}")
+  @Size(max = 20, message = "{userregistration.firstname.maxlength}")
   private String userFirstName;
   
-  @NotBlank
-  @Size(min = 3, max = 20)
+  @NotBlank(message = "{userregistration.lastname.required}")
+  @Size(max = 20, message = "{userregistration.lastname.maxlength}")
   private String userLastName;
   
-  @NotBlank
+  @NotBlank(message = "{userregistration.birthdate.required}")
   @DateTimeFormat(pattern = "DD-MM-YYYY")
   private String birthDate;
   
@@ -46,8 +44,8 @@ public class UserRegistrationRequest {
   
   private String bloodGroup;
   
-  @NotNull
-  private UserCountryRequest country;
+  @NotBlank(message = "{userregistration.country.required}")
+  private Integer country;
   
   @Getter
   public enum Gender{

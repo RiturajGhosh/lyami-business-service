@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Embeddable
-@Entity
 @Getter
 @Setter
 public class Address {

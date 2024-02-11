@@ -5,15 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.lyami.v1.dto.request.UserRegistrationRequest;
 import com.lyami.v1.exception.LyamiBusinessException;
 import com.lyami.v1.mapper.UserRegistrationMapper;
-import com.lyami.v1.repository.UserRegisterRepository;
+import com.lyami.v1.repository.UserBusinessDetailsRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class UserRegistrationServiceImpl implements UserRegistrationService{
 
-	private UserRegisterRepository userRegisterRepository;
+	private UserBusinessDetailsRepository userRegisterRepository;
 	private UserRegistrationMapper userRegistrationMapper;
 	
 	@Autowired
-	public UserRegistrationServiceImpl(UserRegisterRepository userRegisterRepository,
+	public UserRegistrationServiceImpl(UserBusinessDetailsRepository userRegisterRepository,
 			UserRegistrationMapper userRegistrationMapper) {
 		super();
 		this.userRegisterRepository = userRegisterRepository;
@@ -29,7 +32,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 	public void registerUser(UserRegistrationRequest userRegistrationRequest) {
 		// TODO Auto-generated method stub
 		var userBusinessDetails = userRegisterRepository.findByEmail(
-				userRegistrationRequest.getEmail()).orElseThrow(()->new LyamiBusinessException());
+				userRegistrationRequest.getEmail()).orElseThrow(()->
+				new LyamiBusinessException("User already exits"));
+		log.info("userBusinessDetails::"+userBusinessDetails);
 		userBusinessDetails = userRegistrationMapper.mapUserRegistrationReqtoEntity(userRegistrationRequest);
 		userRegisterRepository.save(userBusinessDetails);
 	}
