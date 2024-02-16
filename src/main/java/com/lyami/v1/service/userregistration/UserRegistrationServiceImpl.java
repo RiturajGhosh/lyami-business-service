@@ -1,6 +1,7 @@
 package com.lyami.v1.service.userregistration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.lyami.v1.dto.request.UserRegistrationRequest;
 import com.lyami.v1.exception.LyamiBusinessException;
@@ -10,6 +11,7 @@ import com.lyami.v1.repository.UserBusinessDetailsRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Service
 public class UserRegistrationServiceImpl implements UserRegistrationService{
 
 	private UserBusinessDetailsRepository userRegisterRepository;

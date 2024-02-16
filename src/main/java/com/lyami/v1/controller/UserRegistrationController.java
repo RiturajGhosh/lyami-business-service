@@ -1,7 +1,9 @@
 package com.lyami.v1.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserRegistrationController {
 	
+	@Value("${log4j.mdc.uuid}")
+	private String requestToken;
+	
 	@Autowired
 	UserRegistrationService userRegistrationService;
 	
@@ -27,4 +32,9 @@ public class UserRegistrationController {
 		log.info("UserRegistrationRequest::"+userRegistrationRequest);
 		userRegistrationService.registerUser(userRegistrationRequest);
     }
+	
+	@GetMapping("/getUser")
+	public void getUserDetails() {
+		log.info("UserRegistrationRequest::");
+	}
 }

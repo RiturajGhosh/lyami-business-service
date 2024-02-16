@@ -15,7 +15,7 @@ import com.lyami.v1.repository.CountryRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Mapper
+@Mapper(componentModel = "spring")
 @Slf4j
 public abstract class UserRegistrationMapper {
 	

@@ -13,9 +13,9 @@ server:
   port: 8081
 spring:
   datasource:
-    password: Lyamii@123
-    url: jdbc:mysql://localhost:3306/lyamii_dev?useSSL=false
-    username: Lyamii
+    password: Lyamii123
+    url: jdbc:mysql://lyamii-dev.cdcoc4ge287c.us-east-1.rds.amazonaws.com:3306/lyamii_dev?useSSL=false
+    username: admin
   hikari:
     connectionTimeout: 300000
   jpa:
