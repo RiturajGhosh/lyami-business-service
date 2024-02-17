@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Slf4jMDCFilter extends OncePerRequestFilter {
 	
-	@Value("${log4j.mdc.uuid}")
+	@Value("${application.lyamiifilter.requestToken}")
 	private String requestToken;
 	
     @Override
@@ -26,6 +26,7 @@ public class Slf4jMDCFilter extends OncePerRequestFilter {
     	
     	try {
             MDC.put(requestToken, UUID.randomUUID().toString());
+            log.info("requestToken-->"+requestToken);
             chain.doFilter(request, response);
         } catch (Exception ex) {
             log.error("Exception occurred in filter while setting UUID for logs", ex);
