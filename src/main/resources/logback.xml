@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+ 		<property name="logFile" value="logs/lyamii.log"/>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logFile}</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/lyamii.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each archived file, size max 10MB -->
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+			<totalSizeCap>100GB</totalSizeCap>
+        </rollingPolicy>
+		 <encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - requestToken=%X{requestToken} - %msg%n</pattern>
+		</encoder>
+    </appender>
+    
+    <!-- console log appender -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - requestToken=%X{requestToken} - %msg%n</pattern>
+        </encoder>
+    </appender>
+	
+		<logger name="com.lyamii" level="trace" additivity="false">
+	  		 <appender-ref ref="file"/>
+	  	</logger>
+	
+	    <Root level="error">
+	      <appender-ref ref="STDOUT" />
+       		 <appender-ref ref="file"/>
+	    </Root>
+	  	
+	
+    <!-- <logger name="com.lyamii" level="INFO" additivity="false">
+        <appender-ref ref="file"/>
+    </logger>
+
+    <root level="error">
+    	<appender-ref ref="STDOUT" />
+        <appender-ref ref="file"/>
+    </root> -->
+ </configuration>
