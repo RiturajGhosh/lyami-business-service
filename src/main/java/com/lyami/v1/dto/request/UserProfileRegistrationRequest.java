@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegistrationRequest {
+public class UserProfileRegistrationRequest {
   
-  private UserRegistrationAddressRequest address;
+  private UserProfileAddressRequest address;
   
   @NotBlank(message = "{userregistration.email.required}")
   @Email(message = "{userregistration.email.notvalid}")

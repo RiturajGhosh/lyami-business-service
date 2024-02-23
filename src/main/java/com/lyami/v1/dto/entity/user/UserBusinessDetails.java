@@ -3,6 +3,8 @@ package com.lyami.v1.dto.entity.user;
 import com.lyami.v1.dto.entity.SoldPackage;
 import com.lyami.v1.dto.entity.commons.Address;
 import com.lyami.v1.dto.entity.commons.Country;
+
+import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +27,9 @@ public class UserBusinessDetails {
     @Embedded
     private Address address;
     //unique id of the user - can be used as a surrogate key/ or in business purpose
-    private Integer userUId;
+    @OneToOne
+    @JoinColumn(name = "userUId", referencedColumnName = "id", insertable = false, updatable = false )
+    private UserUUIDSequence UUID;
     private String email;
     private String phoneNumber;
     private String userFirstName;

@@ -2,7 +2,7 @@ package com.lyami.v1.validator;
 
 import java.util.Arrays;
 
-import com.lyami.v1.dto.request.UserRegistrationRequest.Gender;
+import com.lyami.v1.dto.request.UserProfileRegistrationRequest.Gender;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

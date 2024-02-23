@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.lyami.v1.dto.entity.commons.Address;
 import com.lyami.v1.dto.entity.commons.Country;
 import com.lyami.v1.dto.entity.user.UserBusinessDetails;
-import com.lyami.v1.dto.request.UserRegistrationAddressRequest;
-import com.lyami.v1.dto.request.UserRegistrationRequest;
+import com.lyami.v1.dto.entity.user.UserUUIDSequence;
+import com.lyami.v1.dto.request.UserProfileAddressRequest;
+import com.lyami.v1.dto.request.UserProfileRegistrationRequest;
+import com.lyami.v1.dto.response.UserProfileAddressResponse;
+import com.lyami.v1.dto.response.UserProfileResponse;
 import com.lyami.v1.exception.LyamiBusinessException;
 import com.lyami.v1.repository.CountryRepository;
 
@@ -29,8 +32,8 @@ public abstract class UserRegistrationMapper {
         return countryOptional.orElseThrow(() -> new LyamiBusinessException("Invalid country"));
 	}
 	
-	@Named("mapAddress")
-	Address mapAddress(UserRegistrationAddressRequest userRegistrationAddressRequest) {
+	@Named("mapAddressRequest")
+	Address mapAddressRequest(UserProfileAddressRequest userRegistrationAddressRequest) {
 		Address address = new Address();
 		address.setHouseNumber(userRegistrationAddressRequest.getHouseNumber());
 		address.setCity(userRegistrationAddressRequest.getCity());
@@ -40,7 +43,28 @@ public abstract class UserRegistrationMapper {
 		return address;
 	}
 	
-	@Mapping(target = "address", source = "address",  qualifiedByName = "mapAddress")
+	@Named("mapAddressResponse")
+	UserProfileAddressResponse mapAddressRequest(Address address) {
+		UserProfileAddressResponse userProfileAddressResponse = new UserProfileAddressResponse();
+		userProfileAddressResponse.setHouseNumber(address.getHouseNumber());
+		userProfileAddressResponse.setCity(address.getCity());
+		userProfileAddressResponse.setPincode(address.getPincode());
+		userProfileAddressResponse.setState(address.getState());
+		userProfileAddressResponse.setStreet(address.getStreet());
+		return userProfileAddressResponse;
+	}
+	
+	@Named("mapUUID")
+	Integer mapUUID(UserUUIDSequence userUUIDSequence) {
+		Integer UUID = userUUIDSequence.getUUID();
+		return UUID;
+	}
+	
+	@Mapping(target = "address", source = "address",  qualifiedByName = "mapAddressRequest")
 	@Mapping(target = "country", source = "country",  qualifiedByName = "mapCountry")
-	public abstract UserBusinessDetails mapUserRegistrationReqtoEntity(UserRegistrationRequest userRegistrationRequest);
+	public abstract UserBusinessDetails mapUserProfileRegistrationReqtoEntity(UserProfileRegistrationRequest userRegistrationRequest);
+	
+	@Mapping(target = "userProfileAddressResponse", source = "address",  qualifiedByName = "mapAddressResponse")
+	@Mapping(target = "UUID", source = "UUID",  qualifiedByName = "mapUUID")
+	public abstract UserProfileResponse mapUserBusinessDeatailstoUserProfileResponse(UserBusinessDetails UserBusinessDetails);
 }

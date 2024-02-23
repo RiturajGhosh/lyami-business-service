@@ -3,7 +3,8 @@ package com.lyami.v1.service.userregistration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lyami.v1.dto.request.UserRegistrationRequest;
+import com.lyami.v1.dto.request.UserProfileRegistrationRequest;
+import com.lyami.v1.dto.response.UserProfileResponse;
 import com.lyami.v1.exception.LyamiBusinessException;
 import com.lyami.v1.mapper.UserRegistrationMapper;
 import com.lyami.v1.repository.UserBusinessDetailsRepository;
@@ -31,14 +32,26 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 	 *  
 	 */
 	@Override
-	public void registerUser(UserRegistrationRequest userRegistrationRequest) {
+	public void registerUser(UserProfileRegistrationRequest userRegistrationRequest) {
 		// TODO Auto-generated method stub
 		var userBusinessDetails = userRegisterRepository.findByEmail(
 				userRegistrationRequest.getEmail()).orElseThrow(()->
-				new LyamiBusinessException("User already exits"));
-		log.info("userBusinessDetails::"+userBusinessDetails);
-		userBusinessDetails = userRegistrationMapper.mapUserRegistrationReqtoEntity(userRegistrationRequest);
+				new LyamiBusinessException("User already exists"));
+		userBusinessDetails = userRegistrationMapper.mapUserProfileRegistrationReqtoEntity(userRegistrationRequest);
+		log.info("registerUserDetails::"+userBusinessDetails);
 		userRegisterRepository.save(userBusinessDetails);
+	}
+
+
+	@Override
+	public UserProfileResponse getUserProfileDetails(String email) {
+		// TODO Auto-generated method stub
+		var userBusinessDetails = userRegisterRepository.findByEmail(
+				email).orElseThrow(()->
+				new LyamiBusinessException("User does not exists"));
+		log.info("userBusinessDetails::"+userBusinessDetails);
+		var userProfileResponse = userRegistrationMapper.mapUserBusinessDeatailstoUserProfileResponse(userBusinessDetails);
+		return userProfileResponse;
 	}
 
 }

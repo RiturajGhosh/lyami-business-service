@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lyami.v1.controller.auth.AuthenticationController;
-import com.lyami.v1.dto.request.UserRegistrationRequest;
+import com.lyami.v1.dto.request.UserProfileRegistrationRequest;
+import com.lyami.v1.dto.response.UserProfileResponse;
 import com.lyami.v1.service.userregistration.UserRegistrationService;
 
 import jakarta.validation.Valid;
@@ -27,13 +28,16 @@ public class UserRegistrationController {
 	
 	@PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerUser(@Valid @RequestBody UserRegistrationRequest userRegistrationRequest) {
+    public void registerUser(@Valid @RequestBody UserProfileRegistrationRequest userRegistrationRequest) {
 		log.info("UserRegistrationRequest::"+userRegistrationRequest);
 		userRegistrationService.registerUser(userRegistrationRequest);
     }
 	
-	@GetMapping("/getuser")
-	public void getUserDetails() {
-		log.info("UserRegistrationRequest::");
+	@GetMapping("/getuserprofile")
+	public UserProfileResponse getUserProfileDetails(@RequestBody String email) {
+		log.info("email::"+email);
+		var userProfileResponse = userRegistrationService.getUserProfileDetails(email);
+		log.info("userProfileResponse::"+userProfileResponse);
+		return userProfileResponse;
 	}
 }

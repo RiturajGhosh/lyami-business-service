@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class UserRegistrationAddressRequest {
+public class UserProfileAddressRequest {
   
   @NotBlank(message = "{userregistration.address.housenumber.required}")
   private String houseNumber;
