@@ -38,7 +38,8 @@ public class WebSecurityConfig {
             "/v1/dummy/all",
             "/swagger-ui*/**",
             "/v3/api-docs/**",
-            "/stay/**"
+            "/stay/**",
+            "/user/**"
     };
 
     @Autowired

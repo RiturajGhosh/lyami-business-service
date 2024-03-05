@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface CountryRepository extends JpaRepository<Country, Integer> {
     Optional<Country> findByDisplayCode(Integer displayCode);
+	Optional<Country> findById(Integer id) ;
 }
 

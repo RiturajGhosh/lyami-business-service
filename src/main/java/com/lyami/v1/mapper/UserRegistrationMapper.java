@@ -27,8 +27,8 @@ public abstract class UserRegistrationMapper {
 	
 	@Named("mapCountry")
 	Country mapCountry(Integer displayCode) {
+		log.info("displayCode-->"+displayCode);
 		var countryOptional = countryRepository.findByDisplayCode(displayCode);
-		log.info("countryOptional::"+countryOptional);
         return countryOptional.orElseThrow(() -> new LyamiBusinessException("Invalid country"));
 	}
 	

@@ -14,7 +14,6 @@ import com.lyami.v1.dto.request.UserProfileRegistrationRequest.Gender;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = GenderValidator.class)
 public @interface ValidGender {
-	Gender[] anyOf();
     String message() default "Invalid Gender##101";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

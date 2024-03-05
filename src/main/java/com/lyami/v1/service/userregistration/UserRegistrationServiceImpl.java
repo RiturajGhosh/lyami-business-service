@@ -34,11 +34,10 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 	@Override
 	public void registerUser(UserProfileRegistrationRequest userRegistrationRequest) {
 		// TODO Auto-generated method stub
-		var userBusinessDetails = userRegisterRepository.findByEmail(
-				userRegistrationRequest.getEmail()).orElseThrow(()->
-				new LyamiBusinessException("User already exists"));
-		userBusinessDetails = userRegistrationMapper.mapUserProfileRegistrationReqtoEntity(userRegistrationRequest);
-		log.info("registerUserDetails::"+userBusinessDetails);
+		userRegisterRepository.findByEmail(
+				userRegistrationRequest.getEmail()).ifPresent(s->{throw new LyamiBusinessException("User already exists");});
+		var userBusinessDetails = userRegistrationMapper.mapUserProfileRegistrationReqtoEntity(userRegistrationRequest);
+		log.info("registerUserDetails Country::"+userBusinessDetails.getCountry().getCountryName());
 		userRegisterRepository.save(userBusinessDetails);
 	}
 

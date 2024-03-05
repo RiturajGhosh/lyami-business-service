@@ -28,7 +28,7 @@ public class UserBusinessDetails {
     private Address address;
     //unique id of the user - can be used as a surrogate key/ or in business purpose
     @OneToOne
-    @JoinColumn(name = "userUId", referencedColumnName = "id", insertable = false, updatable = false )
+   // @JoinColumn(name = "userUId", referencedColumnName = "id", insertable = false, updatable = false )
     private UserUUIDSequence UUID;
     private String email;
     private String phoneNumber;
