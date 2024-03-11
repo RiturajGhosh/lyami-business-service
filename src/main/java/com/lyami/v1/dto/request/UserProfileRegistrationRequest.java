@@ -38,7 +38,7 @@ public class UserProfileRegistrationRequest {
   private String userFirstName;
   
   @NotBlank(message = "{userregistration.lastname.required}")
-  @Size(max = 4, message = "{userregistration.lastname.maxlength}")
+  @Size(max = 20, message = "{userregistration.lastname.maxlength}")
   private String userLastName;
   
   //@NotNull(message = "{userregistration.birthdate.required}")
@@ -50,8 +50,8 @@ public class UserProfileRegistrationRequest {
   
   private String bloodGroup;
   
-  @NotNull(message = "{userregistration.country.required}")
-  private String country;
+  //@NotNull(message = "{userregistration.country.required}")
+  //private String country;
   
   public enum Gender{
       MALE,FEMALE,OTHER;

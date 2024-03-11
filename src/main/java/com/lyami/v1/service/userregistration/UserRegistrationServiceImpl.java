@@ -37,7 +37,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 		userRegisterRepository.findByEmail(
 				userRegistrationRequest.getEmail()).ifPresent(s->{throw new LyamiBusinessException("User already exists");});
 		var userBusinessDetails = userRegistrationMapper.mapUserProfileRegistrationReqtoEntity(userRegistrationRequest);
-		log.info("registerUserDetails Country::"+userBusinessDetails.getCountry().getCountryName());
 		userRegisterRepository.save(userBusinessDetails);
 	}
 

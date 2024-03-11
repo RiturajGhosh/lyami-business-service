@@ -56,12 +56,15 @@ public abstract class UserRegistrationMapper {
 	
 	@Named("mapUUID")
 	Integer mapUUID(UserUUIDSequence userUUIDSequence) {
-		Integer UUID = userUUIDSequence.getUUID();
+		Integer UUID =null;
+		if(userUUIDSequence!=null) {
+		 UUID = userUUIDSequence.getUUID();
+		}
 		return UUID;
 	}
 	
 	@Mapping(target = "address", source = "address",  qualifiedByName = "mapAddressRequest")
-	@Mapping(target = "country", source = "country",  qualifiedByName = "mapCountry")
+	//@Mapping(target = "country", source = "country",  qualifiedByName = "mapCountry")
 	public abstract UserBusinessDetails mapUserProfileRegistrationReqtoEntity(UserProfileRegistrationRequest userRegistrationRequest);
 	
 	@Mapping(target = "userProfileAddressResponse", source = "address",  qualifiedByName = "mapAddressResponse")
