@@ -27,9 +27,13 @@ public class UserBusinessDetails {
     @Embedded
     private Address address;
     //unique id of the user - can be used as a surrogate key/ or in business purpose
-    @OneToOne
-   // @JoinColumn(name = "userUId", referencedColumnName = "id", insertable = false, updatable = false )
-    private UserUUIDSequence UUID;
+    @GeneratedValue(generator = "UUID_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(
+        name = "UUID_seq", 
+        sequenceName = "UUID_seq", 
+        allocationSize = 50
+    )
+    private String UUID;
     private String email;
     private String phoneNumber;
     private String userFirstName;

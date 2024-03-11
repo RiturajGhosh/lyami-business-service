@@ -20,4 +20,6 @@ public class Address {
     private String city;
     private String state;
     private String pincode;
+    private String postOffice;
+    private String policeStation;
 }

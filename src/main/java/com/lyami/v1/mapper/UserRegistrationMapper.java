@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.lyami.v1.dto.entity.commons.Address;
 import com.lyami.v1.dto.entity.commons.Country;
 import com.lyami.v1.dto.entity.user.UserBusinessDetails;
-import com.lyami.v1.dto.entity.user.UserUUIDSequence;
 import com.lyami.v1.dto.request.UserProfileAddressRequest;
 import com.lyami.v1.dto.request.UserProfileRegistrationRequest;
 import com.lyami.v1.dto.response.UserProfileAddressResponse;
@@ -40,6 +39,8 @@ public abstract class UserRegistrationMapper {
 		address.setPincode(userRegistrationAddressRequest.getPincode());
 		address.setState(userRegistrationAddressRequest.getState());
 		address.setStreet(userRegistrationAddressRequest.getStreet());
+		address.setPostOffice(userRegistrationAddressRequest.getPostOffice());
+		address.setPoliceStation(userRegistrationAddressRequest.getPoliceStation());
 		return address;
 	}
 	
@@ -51,16 +52,9 @@ public abstract class UserRegistrationMapper {
 		userProfileAddressResponse.setPincode(address.getPincode());
 		userProfileAddressResponse.setState(address.getState());
 		userProfileAddressResponse.setStreet(address.getStreet());
+		userProfileAddressResponse.setPostOffice(address.getPostOffice());
+		userProfileAddressResponse.setPoliceStation(address.getPoliceStation());
 		return userProfileAddressResponse;
-	}
-	
-	@Named("mapUUID")
-	Integer mapUUID(UserUUIDSequence userUUIDSequence) {
-		Integer UUID =null;
-		if(userUUIDSequence!=null) {
-		 UUID = userUUIDSequence.getUUID();
-		}
-		return UUID;
 	}
 	
 	@Mapping(target = "address", source = "address",  qualifiedByName = "mapAddressRequest")
@@ -68,6 +62,5 @@ public abstract class UserRegistrationMapper {
 	public abstract UserBusinessDetails mapUserProfileRegistrationReqtoEntity(UserProfileRegistrationRequest userRegistrationRequest);
 	
 	@Mapping(target = "userProfileAddressResponse", source = "address",  qualifiedByName = "mapAddressResponse")
-	@Mapping(target = "UUID", source = "UUID",  qualifiedByName = "mapUUID")
 	public abstract UserProfileResponse mapUserBusinessDeatailstoUserProfileResponse(UserBusinessDetails UserBusinessDetails);
 }

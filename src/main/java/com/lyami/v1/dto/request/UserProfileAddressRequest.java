@@ -20,4 +20,10 @@ public class UserProfileAddressRequest {
   
   @NotBlank(message = "{userregistration.address.pincode.required}")
   private String pincode;
+  
+  @NotBlank(message = "{userregistration.address.postoffice.required}")
+  private String postOffice;
+  
+  @NotBlank(message = "{userregistration.address.policestation.required}")
+  private String policeStation;
 }

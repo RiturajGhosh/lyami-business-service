@@ -1,9 +1,11 @@
 package com.lyami.v1.dto.request;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lyami.v1.validator.ValidGender;
 
 import jakarta.validation.Valid;
@@ -43,7 +45,9 @@ public class UserProfileRegistrationRequest {
   
   //@NotNull(message = "{userregistration.birthdate.required}")
   //@DateTimeFormat(pattern = "DD-MM-YYYY")
-  private Date birthDate;
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  @JsonFormat(pattern="DD-MM-YYYY")
+  private LocalDate birthDate;
   
   @ValidGender
   private Gender gender;

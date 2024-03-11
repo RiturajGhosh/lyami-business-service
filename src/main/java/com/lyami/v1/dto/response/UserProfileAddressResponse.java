@@ -9,4 +9,6 @@ public class UserProfileAddressResponse {
 	private String city;
 	private String state;
 	private String pincode;
+	private String postOffice;
+	private String policeStation;
 }
