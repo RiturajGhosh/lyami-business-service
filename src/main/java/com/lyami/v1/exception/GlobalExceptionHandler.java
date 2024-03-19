@@ -5,11 +5,14 @@
  */
 package com.lyami.v1.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.lyami.v1.dto.response.ErrorResponse;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +22,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.lyami.v1.constants.ApplicationConstants.ACCESS_DENIED_EXCEPTION_MSG;
@@ -29,6 +34,8 @@ public class GlobalExceptionHandler {
 
     public static final int FALLBACK_ERROR_CODE = 900;
     public static final String FALLBACK_ERROR_MSG = "Error occurred please try again or contact with admin";
+    private static final Pattern ENUM_MSG = Pattern.compile("values accepted for Enum class");
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity handleArgumentNotValidException(MethodArgumentNotValidException ex) {
@@ -76,5 +83,17 @@ public class GlobalExceptionHandler {
         log.info(ex.getMessage());
         var errorResponse = new ErrorResponse(List.of(parseError(ACCESS_DENIED_EXCEPTION_MSG)));
         return new ResponseEntity<>(Optional.of(errorResponse), HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ErrorResponse.Error handleJsonErrors(HttpMessageNotReadableException exception){
+        if (exception.getCause() != null && exception.getCause() instanceof InvalidFormatException) {
+            Matcher match = ENUM_MSG.matcher(exception.getCause().getMessage());
+            if (match.find()) {
+               // return new ErrorResponse.Error("value should be: " + match.group(1),  HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        return null;
     }
 }

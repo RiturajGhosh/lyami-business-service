@@ -1,11 +1,17 @@
 package com.lyami.v1.dto.request;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lyami.v1.validator.ValidGender;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,12 +21,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegistrationRequest {
+public class UserProfileRegistrationRequest {
   
-  private UserRegistrationAddressRequest address;
+  @Valid	
+  @NotNull (message = "{userregistration.address.required}")	
+  private UserProfileAddressRequest address;
   
   @NotBlank(message = "{userregistration.email.required}")
-  @Email(message = "{userregistration.email.notvalid}")
+  @Email
   private String email;
   
   @NotBlank(message = "{userregistration.phoneNumber.required}")
@@ -35,19 +43,20 @@ public class UserRegistrationRequest {
   @Size(max = 20, message = "{userregistration.lastname.maxlength}")
   private String userLastName;
   
-  @NotBlank(message = "{userregistration.birthdate.required}")
-  @DateTimeFormat(pattern = "DD-MM-YYYY")
-  private String birthDate;
+  //@NotNull(message = "{userregistration.birthdate.required}")
+  //@DateTimeFormat(pattern = "DD-MM-YYYY")
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  @JsonFormat(pattern="DD-MM-YYYY")
+  private LocalDate birthDate;
   
-  @ValidGender(anyOf = {Gender.MALE, Gender.FEMALE, Gender.OTHER})
+  @ValidGender
   private Gender gender;
   
   private String bloodGroup;
   
-  @NotBlank(message = "{userregistration.country.required}")
-  private Integer country;
+  //@NotNull(message = "{userregistration.country.required}")
+  //private String country;
   
-  @Getter
   public enum Gender{
       MALE,FEMALE,OTHER;
   }

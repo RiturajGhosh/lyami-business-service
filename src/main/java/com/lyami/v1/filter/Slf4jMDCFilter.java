@@ -26,7 +26,7 @@ public class Slf4jMDCFilter extends OncePerRequestFilter {
     	
     	try {
             MDC.put(requestToken, UUID.randomUUID().toString());
-            log.info("requestToken-->"+requestToken);
+           // log.info(MDC.get(requestToken));)
             chain.doFilter(request, response);
         } catch (Exception ex) {
             log.error("Exception occurred in filter while setting UUID for logs", ex);
