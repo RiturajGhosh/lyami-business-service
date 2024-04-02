@@ -15,16 +15,18 @@ public class Image implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private Integer packageId;
+
     private String imageUri;
 
     private ImageType imageType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", referencedColumnName = "id", updatable = false, insertable = false)
+    @JoinColumn(name = "packageId", referencedColumnName = "id", updatable = false, insertable = false)
     private PackageDetails packageDetails;
 
     public enum ImageType{
-        HOSTEL(1, "hostel"), PACKAGE(2, "package"), GENERIC(2, "generic");
+        HOSTEL(0, "hostel"), PACKAGE(2, "package"), GENERIC(2, "generic");
 
         private Integer value;
         private String label;

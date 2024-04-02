@@ -36,6 +36,7 @@ public class WebSecurityConfig {
     private static final String[] AUTH_WHITELIST = {
             "/v1/authenticate/**",
             "/v1/dummy/all",
+            "/v1/common/**",
             "/swagger-ui*/**",
             "/v3/api-docs/**",
             "/stay/**",

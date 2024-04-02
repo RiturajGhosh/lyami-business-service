@@ -1,6 +1,8 @@
 package com.lyami.v1.dto.entity;
 
 import com.lyami.v1.dto.entity.commons.Currency;
+import com.lyami.v1.dto.entity.commons.Country;
+import com.lyami.v1.dto.entity.commons.Edition;
 import com.lyami.v1.dto.entity.commons.Image;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -19,33 +21,56 @@ public class PackageDetails implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = true)
     private String packageId;
 
-    private String packagePrice;
+    @Column(unique = true)
+    private String packageName;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Currency currency;
+    private String title;
+
+    @Column(length = 1000, columnDefinition = "TEXT")
+    private String description;
+
+    @Column(length = 1000, columnDefinition = "TEXT")
+    private String overview;
+
+    @Column(length = 1000, columnDefinition = "TEXT")
+    private String highlights;
 
     private Integer noOfDays;
 
-    private TripType tripType;
+    @Column(length = 2000)
+    private String itinerary;
 
-    private String itineary;
+    @Column(length = 1000, columnDefinition = "TEXT")
+    private String includes;
 
-    private String highlights;
+    @Column(length = 1000, columnDefinition = "TEXT")
+    private String destinations;
+
+    private String packagePrice;
 
     @Max(value = 5)
     @Min(value = 1)
     private Integer rating;
 
-    private String overview;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currencyId")
+    private Currency currency;
 
-    private String title;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "countryId")
+    private Country country;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "editionId")
+    private Edition edition;
+
+    private TripType tripType;
 
     @OneToMany(mappedBy = "packageDetails")
     private List<Image> image;
-
-    private String description;
 
     public enum TripType {
 
