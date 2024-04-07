@@ -72,6 +72,8 @@ public class PackageDetails implements Serializable {
     @OneToMany(mappedBy = "packageDetails")
     private List<Image> image;
 
+    private Boolean isPopular;
+
     public enum TripType {
 
         SOLO(1, "solo"), BACKPACKER(2, "backpacker"), ALL(3, "all");

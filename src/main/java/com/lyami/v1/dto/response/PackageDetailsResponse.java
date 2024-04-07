@@ -33,5 +33,5 @@ public class PackageDetailsResponse {
     private String tripType;
     private String country;
 //    private String edition;
-//    private List<String> image;
+    private List<String> imageUri;
 }
