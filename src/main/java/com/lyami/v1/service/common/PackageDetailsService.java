@@ -12,12 +12,13 @@ public interface PackageDetailsService {
 
     ResponseEntity<PackageDetailsResponse> getPackageDetailsByPackageId(String packageId);
 
-    ResponseEntity<List<PackageDetailsResponse>> getFilteredPackageDetails(Integer countryId, Integer noOfDays);
+    ResponseEntity<List<PackageDetailsResponse>> getFilteredPackageDetails(Long countryId, Integer noOfDays);
 
-    ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(Integer editionId);
+    ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(Long editionId);
 
     ResponseEntity<List<PackageDetailsResponse>> getPopularPackages(Boolean isPopular);
 
     ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByDestination(String destination);
 
+    ResponseEntity<List<PackageDetailsResponse>> getNonIndianPackageDetails();
 }

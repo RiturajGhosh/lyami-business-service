@@ -36,7 +36,7 @@ public class PackageDetailsServiceImpl implements PackageDetailsService {
     }
 
     @Override
-    public ResponseEntity<List<PackageDetailsResponse>> getFilteredPackageDetails(Integer countryId, Integer noOfDays){
+    public ResponseEntity<List<PackageDetailsResponse>> getFilteredPackageDetails(Long countryId, Integer noOfDays){
         List<PackageDetails> packageDetailsList;
 
         if(countryId != null && noOfDays != null){
@@ -53,7 +53,7 @@ public class PackageDetailsServiceImpl implements PackageDetailsService {
     }
 
     @Override
-    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(Integer editionId){
+    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(Long editionId){
         List<PackageDetails> packageDetailsList = packageDetailsRepository.findByEditionId(editionId);
 
         return ResponseEntity.ok(generateResponse(packageDetailsList));
@@ -69,6 +69,13 @@ public class PackageDetailsServiceImpl implements PackageDetailsService {
     @Override
     public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByDestination(String destination){
         List<PackageDetails> packageDetailsList = packageDetailsRepository.findByDestinationsLike("%" + destination + "%");
+
+        return ResponseEntity.ok(generateResponse(packageDetailsList));
+    }
+
+    @Override
+    public ResponseEntity<List<PackageDetailsResponse>> getNonIndianPackageDetails(){
+        List<PackageDetails> packageDetailsList = packageDetailsRepository.findByCountryIdNot(1L);
 
         return ResponseEntity.ok(generateResponse(packageDetailsList));
     }
@@ -90,7 +97,7 @@ public class PackageDetailsServiceImpl implements PackageDetailsService {
 
     private List<PackageDetailsResponse> generateResponse(List<PackageDetails> packageDetailsList){
 
-        if(packageDetailsList == null || packageDetailsList.size() == 0) throw new LyamiBusinessException("Packages do not exist");
+        if(packageDetailsList == null || packageDetailsList.isEmpty()) throw new LyamiBusinessException("Packages do not exist");
 
         List<PackageDetailsResponse> packageDetailsResponses = new ArrayList<>(packageDetailsList.size());
         for(PackageDetails p : packageDetailsList){

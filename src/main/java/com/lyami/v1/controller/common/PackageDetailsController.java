@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("v1/common")
+@RequestMapping("/v1/common")
 @Slf4j
 public class PackageDetailsController {
 
@@ -29,14 +29,14 @@ public class PackageDetailsController {
 
     @GetMapping("/package")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<PackageDetailsResponse>> getFilteredPackageDetails(@RequestParam(required = false) Integer countryId, @RequestParam(required = false) Integer noOfDays){
+    public ResponseEntity<List<PackageDetailsResponse>> getFilteredPackageDetails(@RequestParam(required = false) Long countryId, @RequestParam(required = false) Integer noOfDays){
         //log.info("packageId::"+packageId);
         return packageDetailsService.getFilteredPackageDetails(countryId, noOfDays);
     }
 
     @GetMapping("/package/edition/{editionId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(@PathVariable("editionId") Integer editionId){
+    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(@PathVariable("editionId") Long editionId){
 
         return packageDetailsService.getPackageDetailsByEditionId(editionId);
     }
@@ -53,6 +53,14 @@ public class PackageDetailsController {
     public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByDestination(@RequestParam @NotBlank String destination){
 
         return packageDetailsService.getPackageDetailsByDestination(destination);
+    }
+
+
+    @GetMapping("/package/non_indian")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<PackageDetailsResponse>> getNonIndianPackageDetails(){
+
+        return packageDetailsService.getNonIndianPackageDetails();
     }
 
 }

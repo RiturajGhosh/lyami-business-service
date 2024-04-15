@@ -1,7 +1,6 @@
 package com.lyami.v1.dto.request;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,13 +14,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserProfileRegistrationRequest {
+public class UserBusinessDetailsRegistrationRequest {
   
   @Valid	
   @NotNull (message = "{userregistration.address.required}")	
@@ -45,8 +43,8 @@ public class UserProfileRegistrationRequest {
   
   //@NotNull(message = "{userregistration.birthdate.required}")
   //@DateTimeFormat(pattern = "DD-MM-YYYY")
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  @JsonFormat(pattern="DD-MM-YYYY")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  @JsonFormat(pattern="yyyy-MM-dd")
   private LocalDate birthDate;
   
   @ValidGender

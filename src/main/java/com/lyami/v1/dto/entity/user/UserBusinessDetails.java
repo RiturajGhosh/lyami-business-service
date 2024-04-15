@@ -22,8 +22,9 @@ public class UserBusinessDetails {
     private Long userDetailsId;
     //1:1 relation with User table- user table is primarily used for authentication and authorization purpose
     @OneToOne
-    @JoinColumn(name = "userDetailsId", referencedColumnName = "id", insertable = false, updatable = false )
+    @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false )
     private User user;
+
     @Embedded
     private Address address;
     //unique id of the user - can be used as a surrogate key/ or in business purpose
@@ -34,6 +35,8 @@ public class UserBusinessDetails {
         allocationSize = 50
     )
     private String UUID;
+    //TO DO: add profile photo and passport blob here
+    @Column(unique = true)
     private String email;
     private String phoneNumber;
     private String userFirstName;
@@ -50,7 +53,7 @@ public class UserBusinessDetails {
     private Set<SoldPackage> soldPackageSet;
 
     @ManyToOne
-    @JoinColumn(name = "userDetailsId", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "countryId", referencedColumnName = "id", insertable = false, updatable = false)
     private Country country;
 
     @Getter
