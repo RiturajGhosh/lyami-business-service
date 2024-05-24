@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import com.lyami.v1.mapper.PackageDetailsMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,13 @@ import java.util.List;
 public class PackageDetailsServiceImpl implements PackageDetailsService {
 
     private PackageDetailsRepository packageDetailsRepository;
+    private PackageDetailsMapper packageDetailsMapper;
 
     @Autowired
-    public PackageDetailsServiceImpl(PackageDetailsRepository packageDetailsRepository) {
+    public PackageDetailsServiceImpl(PackageDetailsRepository packageDetailsRepository, PackageDetailsMapper packageDetailsMapper) {
         super();
         this.packageDetailsRepository = packageDetailsRepository;
+        this.packageDetailsMapper = packageDetailsMapper;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class PackageDetailsServiceImpl implements PackageDetailsService {
                 new LyamiBusinessException("Package does not exists"));
         log.info("packageDetails::"+packageDetails);
 
-        return ResponseEntity.ok(generateResponse(packageDetails));
+        return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetails));
     }
 
     @Override
@@ -49,62 +52,38 @@ public class PackageDetailsServiceImpl implements PackageDetailsService {
             packageDetailsList = packageDetailsRepository.findAll();
         }
 
-        return ResponseEntity.ok(generateResponse(packageDetailsList));
+        return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetailsList));
     }
 
     @Override
     public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(Long editionId){
         List<PackageDetails> packageDetailsList = packageDetailsRepository.findByEditionId(editionId);
 
-        return ResponseEntity.ok(generateResponse(packageDetailsList));
+        return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetailsList));
     }
 
     @Override
     public ResponseEntity<List<PackageDetailsResponse>> getPopularPackages(Boolean isPopular){
         List<PackageDetails> packageDetailsList = packageDetailsRepository.findByIsPopular(true);
 
-        return ResponseEntity.ok(generateResponse(packageDetailsList));
+        return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetailsList));
     }
 
     @Override
     public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByDestination(String destination){
         List<PackageDetails> packageDetailsList = packageDetailsRepository.findByDestinationsLike("%" + destination + "%");
 
-        return ResponseEntity.ok(generateResponse(packageDetailsList));
+        return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetailsList));
     }
 
     @Override
     public ResponseEntity<List<PackageDetailsResponse>> getNonIndianPackageDetails(){
         List<PackageDetails> packageDetailsList = packageDetailsRepository.findByCountryIdNot(1L);
 
-        return ResponseEntity.ok(generateResponse(packageDetailsList));
+        return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetailsList));
     }
 
 
-    private PackageDetailsResponse generateResponse(PackageDetails packageDetails){
 
-        List<String> imageUri = new ArrayList<>();
-        for(Image image : packageDetails.getImage()){
-            imageUri.add(image.getImageUri());
-        }
-        return new PackageDetailsResponse(
-                packageDetails.getPackageId(), packageDetails.getPackageName(), packageDetails.getTitle(), packageDetails.getDescription(),
-                packageDetails.getOverview(), packageDetails.getHighlights(), packageDetails.getNoOfDays(), packageDetails.getItinerary(),
-                packageDetails.getIncludes(), packageDetails.getDestinations(), packageDetails.getPackagePrice(), packageDetails.getRating(),
-                packageDetails.getCurrency().getLabel(), packageDetails.getTripType().toString(), packageDetails.getCountry().getCountryName(),
-                imageUri);
-    }
-
-    private List<PackageDetailsResponse> generateResponse(List<PackageDetails> packageDetailsList){
-
-        if(packageDetailsList == null || packageDetailsList.isEmpty()) throw new LyamiBusinessException("Packages do not exist");
-
-        List<PackageDetailsResponse> packageDetailsResponses = new ArrayList<>(packageDetailsList.size());
-        for(PackageDetails p : packageDetailsList){
-            packageDetailsResponses.add(generateResponse(p));
-        }
-
-        return packageDetailsResponses;
-    }
 
 }

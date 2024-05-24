@@ -18,8 +18,9 @@ public class SoldPackage  {
     private String packageId;
     private Date prfDepatureDate;
     @ManyToOne
-    @JoinColumn(name = "soldPackageId", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "packageId", referencedColumnName = "packageId", insertable = false, updatable = false)
     private PackageDetails packageDetails;
+
     @ManyToMany(mappedBy = "soldPackageSet")
     Set<UserBusinessDetails> userBusinessDetailsList;
     private Boolean isCancelled;

@@ -44,6 +44,7 @@ public class UserBusinessDetails {
     private Date birthDate;
     private Gender gender;
     private String bloodGroup;
+
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "UserTour",

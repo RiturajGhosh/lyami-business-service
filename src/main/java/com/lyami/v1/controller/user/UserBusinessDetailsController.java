@@ -5,7 +5,7 @@ import com.lyami.v1.dto.UserDetailsImpl;
 import com.lyami.v1.dto.entity.user.UserBusinessDetails;
 import com.lyami.v1.dto.request.UserBusinessDetailsRegistrationRequest;
 import com.lyami.v1.dto.request.UserBusinessDetailsUpdateRequest;
-import com.lyami.v1.dto.response.UserProfileResponse;
+import com.lyami.v1.dto.response.*;
 import com.lyami.v1.service.user.UserBusinessDetailsService;
 import com.lyami.v1.validator.ValidEmailId;
 import jakarta.validation.Valid;
@@ -19,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -64,6 +66,56 @@ public class UserBusinessDetailsController {
         } else return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+
+    @GetMapping("/tours/upcoming")
+    @PreAuthorize(ApplicationConstants.USER_ROLE_AUTHORIZER)
+    public ResponseEntity<List<SoldPackageResponse>> getUpcomingTours(@NotBlank @ValidEmailId @RequestParam String email){
+        List<SoldPackageResponse> upcomingTours = null;
+        if(verifyUser(email)){
+            log.info("email::"+ email);
+            upcomingTours = userBusinessDetailsService.getUpcomingTours(email);
+        } else return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        return ResponseEntity.ok(upcomingTours);
+    }
+
+
+    @GetMapping("/dashboard")
+    @PreAuthorize(ApplicationConstants.USER_ROLE_AUTHORIZER)
+    public ResponseEntity<UserDashboardResponse> getUserDashboard(@NotBlank @ValidEmailId @RequestParam String email){
+        UserDashboardResponse userDashboardResponse = null;
+        if(verifyUser(email)){
+            log.info("email::"+ email);
+            userDashboardResponse = userBusinessDetailsService.getUserDashboard(email);
+        } else return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        return ResponseEntity.ok(userDashboardResponse);
+    }
+
+    @GetMapping("/itinerary")
+    @PreAuthorize(ApplicationConstants.USER_ROLE_AUTHORIZER)
+    public ResponseEntity<OngoingTourSingleDayItinerary> getDetailedItinerary(@NotBlank @ValidEmailId @RequestParam String email){
+        OngoingTourSingleDayItinerary ongoingTourSingleDayItinerary = null;
+        if(verifyUser(email)){
+            log.info("email::"+ email);
+            ongoingTourSingleDayItinerary = userBusinessDetailsService.getDetailedItinerary(email);
+        } else return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        return ResponseEntity.ok(ongoingTourSingleDayItinerary);
+    }
+
+    @GetMapping("/itinerary/brief")
+    @PreAuthorize(ApplicationConstants.USER_ROLE_AUTHORIZER)
+    public ResponseEntity<List<OngoingTourSingleDayBrief>> getBriefDetailsForOngoingTour(@NotBlank @ValidEmailId @RequestParam String email){
+        List<OngoingTourSingleDayBrief> ongoingTourAllDayBrief = null;
+        if(verifyUser(email)){
+            log.info("email::"+ email);
+            ongoingTourAllDayBrief = userBusinessDetailsService.getBriefDetailsForOngoingTour(email);
+        } else return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        return ResponseEntity.ok(ongoingTourAllDayBrief);
     }
 
     private Boolean verifyUser(String email){

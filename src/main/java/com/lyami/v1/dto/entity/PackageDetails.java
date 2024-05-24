@@ -4,6 +4,7 @@ import com.lyami.v1.dto.entity.commons.Currency;
 import com.lyami.v1.dto.entity.commons.Country;
 import com.lyami.v1.dto.entity.commons.Edition;
 import com.lyami.v1.dto.entity.commons.Image;
+import com.lyami.v1.dto.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -73,6 +74,10 @@ public class PackageDetails implements Serializable {
     private List<Image> image;
 
     private Boolean isPopular;
+
+    @OneToMany
+    @JoinColumn(name = "packageId", referencedColumnName = "packageId", insertable = false, updatable = false )
+    private List<PackageItinerary> packageItinerary;
 
     public enum TripType {
 
