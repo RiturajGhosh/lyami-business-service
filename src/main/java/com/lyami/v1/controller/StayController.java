@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/stay")
 public class StayController {
 

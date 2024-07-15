@@ -10,57 +10,61 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
-@CrossOrigin
 @RequestMapping("/v1/common")
 @Slf4j
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PackageDetailsController {
 
     @Autowired
-    PackageDetailsService packageDetailsService;
+    private PackageDetailsService packageDetailsService;
 
     @GetMapping("/package/{packageId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<PackageDetailsResponse> getPackageDetailsByPackageId(@PathVariable("packageId") String packageId){
-        //log.info("packageId::"+packageId);
+    public ResponseEntity<PackageDetailsResponse> getPackageDetailsByPackageId(
+            @PathVariable("packageId") String packageId) {
         return packageDetailsService.getPackageDetailsByPackageId(packageId);
     }
 
+    @CrossOrigin(origins = "*") // Allow all origins. Modify as needed.
     @GetMapping("/package")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<PackageDetailsResponse>> getFilteredPackageDetails(@RequestParam(required = false) Long countryId, @RequestParam(required = false) Integer noOfDays){
-        //log.info("packageId::"+packageId);
+    public ResponseEntity<List<PackageDetailsResponse>> getFilteredPackageDetails(
+            @RequestParam(required = false) Long countryId, @RequestParam(required = false) Integer noOfDays) {
         return packageDetailsService.getFilteredPackageDetails(countryId, noOfDays);
     }
 
     @GetMapping("/package/edition/{editionId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(@PathVariable("editionId") Long editionId){
-
+    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(
+            @PathVariable("editionId") Long editionId) {
         return packageDetailsService.getPackageDetailsByEditionId(editionId);
     }
 
+    @CrossOrigin(origins = "*") // Allow all origins. Modify as needed.
     @GetMapping("/package/popular")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(){
-
+    public ResponseEntity<List<PackageDetailsResponse>> getPopularPackages() {
         return packageDetailsService.getPopularPackages(true);
     }
 
     @GetMapping("/package/destination")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByDestination(@RequestParam @NotBlank String destination){
-
+    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByDestination(
+            @RequestParam @NotBlank String destination) {
         return packageDetailsService.getPackageDetailsByDestination(destination);
     }
 
-
     @GetMapping("/package/non_indian")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<PackageDetailsResponse>> getNonIndianPackageDetails(){
-
+    public ResponseEntity<List<PackageDetailsResponse>> getNonIndianPackageDetails() {
         return packageDetailsService.getNonIndianPackageDetails();
     }
-
 }

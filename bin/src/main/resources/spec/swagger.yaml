@@ -1,0 +1,253 @@
+---
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8081
+    description: Generated server url
+paths:
+  "/v1/authenticate/verify/otp":
+    post:
+      tags:
+        - authentication-controller
+      operationId: verifyOtp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/OTPVerificationRequest"
+        required: true
+      responses:
+        '204':
+          description: No Content
+  "/v1/authenticate/verify/email":
+    post:
+      tags:
+        - authentication-controller
+      operationId: verifyEmail
+      parameters:
+        - name: emailId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+  "/v1/authenticate/signup":
+    post:
+      tags:
+        - authentication-controller
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/SignupRequest"
+        required: true
+      responses:
+        '201':
+          description: Created
+  "/v1/authenticate/signin":
+    post:
+      tags:
+        - authentication-controller
+      operationId: authenticateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/JwtResponse"
+  "/v1/authenticate/refresh":
+    post:
+      tags:
+        - authentication-controller
+      operationId: refreshToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/JwtRefreshRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/JwtResponse"
+  "/stay/uploadimage/{registrationId}":
+    post:
+      tags:
+        - stay-controller
+      operationId: uploadStayRegistrationImages
+      parameters:
+        - name: registrationId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+        required: true
+      responses:
+        '204':
+          description: No Content
+  "/stay/registration":
+    post:
+      tags:
+        - stay-controller
+      operationId: registerStays
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/StayRegistrationRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            id:
+              schema:
+                type: integer
+              description: id of the saved entity
+components:
+  schemas:
+    OTPVerificationRequest:
+      type: object
+      properties:
+        emailId:
+          type: string
+        otp:
+          type: string
+    SignupRequest:
+      required:
+        - email
+        - password
+        - username
+      type: object
+      properties:
+        username:
+          maxLength: 20
+          minLength: 3
+          type: string
+        email:
+          maxLength: 50
+          minLength: 0
+          type: string
+        role:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        password:
+          maxLength: 40
+          minLength: 6
+          type: string
+    LoginRequest:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    JwtResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        type:
+          type: string
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+    JwtRefreshRequest:
+      required:
+        - email
+        - token
+      type: object
+      properties:
+        email:
+          type: string
+        token:
+          type: string
+    StayRegistrationRequest:
+      required:
+        - address
+        - amenities
+        - contactNumber
+        - pincode
+        - stayName
+        - stayType
+      type: object
+      properties:
+        stayName:
+          type: string
+        stayType:
+          type: string
+          enum:
+            - HOSTEL
+            - HOTEL
+        countryDisplayCode:
+          type: string
+        pincode:
+          type: integer
+          format: int32
+        address:
+          type: string
+        contactNumber:
+          type: string
+        emailAddress:
+          type: string
+        hostName:
+          type: string
+        marketingContact:
+          type: string
+        opsContact:
+          type: string
+        amenities:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            enum:
+              - LOCAL_TOUR
+              - BREAKFAST_BUFFET
+              - FEMALE_DORM
+              - NO_RACISM
+              - LOCKER
+              - WIFI
+              - AIRPORT_TRANSFER
+              - LUNCH_BUFFET
+              - POOL
+              - GYM

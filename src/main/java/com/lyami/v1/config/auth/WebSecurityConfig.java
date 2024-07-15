@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
@@ -37,10 +38,12 @@ public class WebSecurityConfig {
             "/v1/authenticate/**",
             "/v1/dummy/all",
             "/v1/common/**",
+            "/v1/user/**",
             "/swagger-ui*/**",
             "/v3/api-docs/**",
             "/stay/**",
-            "/user/**"
+            "/user/**",
+	    "/actuator/health"
     };
 
     @Autowired

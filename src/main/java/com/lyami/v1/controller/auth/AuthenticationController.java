@@ -21,12 +21,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/v1/authenticate")
 @Slf4j
 public class AuthenticationController {
 
-    private AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     @Autowired
     public AuthenticationController(AuthenticationService authenticationService) {
@@ -61,3 +61,4 @@ public class AuthenticationController {
         authenticationService.verifyOtp(otpVerificationRequest);
     }
 }
+

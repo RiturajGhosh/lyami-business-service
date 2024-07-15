@@ -10,12 +10,13 @@ lyami:
     jwtexpiryms: 1800000
     jwtsecret: LyamiiDotComBharatMataKiJayJayShreeRamHarHarMahaDevJaySriKrishnaLetsDoIt
 server:
+  address: 0.0.0.0
   port: 8081
 spring:
   datasource:
-    password: Lyamii123
-    url: jdbc:mysql://lyamii-dev.cdcoc4ge287c.us-east-1.rds.amazonaws.com:3306/lyamii_dev?useSSL=false
-    username: admin
+    password: Sweety@123
+    url: jdbc:mysql://localhost:3306/lyami-dev?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
   hikari:
     connectionTimeout: 300000
   jpa:
@@ -60,3 +61,5 @@ retry:
     initialinterval: 1000
     maxinterval: 60000
     intervalMultiplier: 2
+
+

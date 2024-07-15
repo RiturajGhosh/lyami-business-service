@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/v1/user")
 @Slf4j
 public class UserBusinessDetailsController {
