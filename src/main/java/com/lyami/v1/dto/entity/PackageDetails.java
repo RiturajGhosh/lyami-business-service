@@ -70,8 +70,7 @@ public class PackageDetails implements Serializable {
 
     private TripType tripType;
 
-    @OneToMany(mappedBy = "packageDetails")
-    private List<Image> image;
+    private String imageUri;
 
     private Boolean isPopular;
 
