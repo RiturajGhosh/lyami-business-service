@@ -19,7 +19,7 @@ public class PackageDetailsMapper {
                 packageDetails.getOverview(), packageDetails.getHighlights(), packageDetails.getNoOfDays(), packageDetails.getItinerary(),
                 packageDetails.getIncludes(), packageDetails.getDestinations(), packageDetails.getPackagePrice(), packageDetails.getRating(),
                 packageDetails.getCurrency().getLabel(), packageDetails.getTripType().toString(), packageDetails.getCountry().getCountryName(),
-                packageDetails.getImageUri());
+                packageDetails.getImageUri(), packageDetails.getBookingPrice());
     }
 
     public List<PackageDetailsResponse> generateResponse(List<PackageDetails> packageDetailsList){

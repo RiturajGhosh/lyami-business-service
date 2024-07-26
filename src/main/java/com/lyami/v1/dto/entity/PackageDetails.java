@@ -71,7 +71,7 @@ public class PackageDetails implements Serializable {
     private TripType tripType;
 
     private String imageUri;
-
+    private String bookingPrice;
     private Boolean isPopular;
 
     @OneToMany

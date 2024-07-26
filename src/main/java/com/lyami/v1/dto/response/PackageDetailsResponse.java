@@ -34,4 +34,5 @@ public class PackageDetailsResponse {
     private String country;
 //    private String edition;
     private String imageUri;
+    private String bookingPrice;
 }
