@@ -1,5 +1,6 @@
 package com.lyami.v1.service.common;
 
+import com.lyami.v1.dto.entity.PackageDetails;
 import com.lyami.v1.dto.response.PackageDetailsResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ public interface PackageDetailsService {
     ResponseEntity<List<PackageDetailsResponse>> getFilteredPackageDetails(Long countryId, Integer noOfDays);
 
     ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(Long editionId);
+
+    ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByTripType(Integer tripType, Long countryId);
 
     ResponseEntity<List<PackageDetailsResponse>> getPopularPackages(Boolean isPopular);
 

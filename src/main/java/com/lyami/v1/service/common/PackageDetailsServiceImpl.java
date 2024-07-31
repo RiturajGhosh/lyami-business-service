@@ -22,31 +22,31 @@ public class PackageDetailsServiceImpl implements PackageDetailsService {
     private PackageDetailsMapper packageDetailsMapper;
 
     @Autowired
-    public PackageDetailsServiceImpl(PackageDetailsRepository packageDetailsRepository, PackageDetailsMapper packageDetailsMapper) {
+    public PackageDetailsServiceImpl(PackageDetailsRepository packageDetailsRepository,
+            PackageDetailsMapper packageDetailsMapper) {
         super();
         this.packageDetailsRepository = packageDetailsRepository;
         this.packageDetailsMapper = packageDetailsMapper;
     }
 
     @Override
-    public ResponseEntity<PackageDetailsResponse> getPackageDetailsByPackageId(String packageId){
+    public ResponseEntity<PackageDetailsResponse> getPackageDetailsByPackageId(String packageId) {
         var packageDetails = packageDetailsRepository.findByPackageId(
-                packageId).orElseThrow(()->
-                new LyamiBusinessException("Package does not exists"));
-        log.info("packageDetails::"+packageDetails);
+                packageId).orElseThrow(() -> new LyamiBusinessException("Package does not exists"));
+        log.info("packageDetails::" + packageDetails);
 
         return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetails));
     }
 
     @Override
-    public ResponseEntity<List<PackageDetailsResponse>> getFilteredPackageDetails(Long countryId, Integer noOfDays){
+    public ResponseEntity<List<PackageDetailsResponse>> getFilteredPackageDetails(Long countryId, Integer noOfDays) {
         List<PackageDetails> packageDetailsList;
 
-        if(countryId != null && noOfDays != null){
+        if (countryId != null && noOfDays != null) {
             packageDetailsList = packageDetailsRepository.findByCountryIdAndNoOfDays(countryId, noOfDays);
-        } else if(countryId != null){
+        } else if (countryId != null) {
             packageDetailsList = packageDetailsRepository.findByCountryId(countryId);
-        } else if(noOfDays != null){
+        } else if (noOfDays != null) {
             packageDetailsList = packageDetailsRepository.findByNoOfDays(noOfDays);
         } else {
             packageDetailsList = packageDetailsRepository.findAll();
@@ -56,34 +56,40 @@ public class PackageDetailsServiceImpl implements PackageDetailsService {
     }
 
     @Override
-    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(Long editionId){
+    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(Long editionId) {
         List<PackageDetails> packageDetailsList = packageDetailsRepository.findByEditionId(editionId);
 
         return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetailsList));
     }
 
     @Override
-    public ResponseEntity<List<PackageDetailsResponse>> getPopularPackages(Boolean isPopular){
+    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByTripType(Integer tripType, Long countryId) {
+        List<PackageDetails> packageDetailsList = packageDetailsRepository.findByTripTypeAndCountryId(tripType,
+                countryId);
+
+        return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetailsList));
+    }
+
+    @Override
+    public ResponseEntity<List<PackageDetailsResponse>> getPopularPackages(Boolean isPopular) {
         List<PackageDetails> packageDetailsList = packageDetailsRepository.findByIsPopular(true);
 
         return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetailsList));
     }
 
     @Override
-    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByDestination(String destination){
-        List<PackageDetails> packageDetailsList = packageDetailsRepository.findByDestinationsLike("%" + destination + "%");
+    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByDestination(String destination) {
+        List<PackageDetails> packageDetailsList = packageDetailsRepository
+                .findByDestinationsLike("%" + destination + "%");
 
         return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetailsList));
     }
 
     @Override
-    public ResponseEntity<List<PackageDetailsResponse>> getNonIndianPackageDetails(){
+    public ResponseEntity<List<PackageDetailsResponse>> getNonIndianPackageDetails() {
         List<PackageDetails> packageDetailsList = packageDetailsRepository.findByCountryIdNot(1L);
 
         return ResponseEntity.ok(packageDetailsMapper.generateResponse(packageDetailsList));
     }
-
-
-
 
 }

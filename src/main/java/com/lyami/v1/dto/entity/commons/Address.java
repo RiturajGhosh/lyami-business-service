@@ -2,8 +2,6 @@ package com.lyami.v1.dto.entity.commons;
 
 import java.util.List;
 
-import com.lyami.v1.dto.entity.PackageDetails.TripType;
-
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

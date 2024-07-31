@@ -1,5 +1,6 @@
 package com.lyami.v1.controller.common;
 
+import com.lyami.v1.dto.entity.PackageDetails;
 import com.lyami.v1.dto.response.PackageDetailsResponse;
 import com.lyami.v1.service.common.PackageDetailsService;
 import jakarta.validation.constraints.NotBlank;
@@ -10,12 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 @RequestMapping("/v1/common")
@@ -46,6 +41,13 @@ public class PackageDetailsController {
     public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByEditionId(
             @PathVariable("editionId") Long editionId) {
         return packageDetailsService.getPackageDetailsByEditionId(editionId);
+    }
+
+    @GetMapping("/package/tripType")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<PackageDetailsResponse>> getPackageDetailsByTripType(
+            @RequestParam(required = false) Integer tripType, @RequestParam(required = false) Long countryId) {
+        return packageDetailsService.getPackageDetailsByTripType(tripType, countryId);
     }
 
     @CrossOrigin(origins = "*") // Allow all origins. Modify as needed.

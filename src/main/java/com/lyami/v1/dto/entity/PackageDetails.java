@@ -68,7 +68,7 @@ public class PackageDetails implements Serializable {
     @JoinColumn(name = "editionId")
     private Edition edition;
 
-    private TripType tripType;
+    private Integer tripType;
 
     private String imageUri;
     private String bookingPrice;
@@ -78,15 +78,15 @@ public class PackageDetails implements Serializable {
     @JoinColumn(name = "packageId", referencedColumnName = "packageId", insertable = false, updatable = false )
     private List<PackageItinerary> packageItinerary;
 
-    public enum TripType {
+    // public enum TripType {
 
-        SOLO(1, "solo"), BACKPACKER(2, "backpacker"), ALL(3, "all");
-        private Integer value;
-        private String label;
+    //     SOLO(1, "solo"), BACKPACKER(2, "backpacker"), ALL(3, "all");
+    //     private Integer value;
+    //     private String label;
 
-        TripType(Integer value, String label) {
-            this.value = value;
-            this.label = label;
-        }
-    }
+    //     TripType(Integer value, String label) {
+    //         this.value = value;
+    //         this.label = label;
+    //     }
+    // }
 }

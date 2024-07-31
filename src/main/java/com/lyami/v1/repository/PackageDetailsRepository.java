@@ -13,6 +13,7 @@ public interface PackageDetailsRepository extends JpaRepository<PackageDetails, 
 
     @Override
     List<PackageDetails> findAll();
+
     List<PackageDetails> findByCountryId(Long country);
 
     List<PackageDetails> findByCountryIdAndNoOfDays(Long countryId, Integer noOfDays);
@@ -20,6 +21,8 @@ public interface PackageDetailsRepository extends JpaRepository<PackageDetails, 
     List<PackageDetails> findByNoOfDays(Integer noOfDays);
 
     List<PackageDetails> findByEditionId(Long editionId);
+
+    List<PackageDetails> findByTripTypeAndCountryId(Integer tripType, Long countryId);
 
     List<PackageDetails> findByIsPopular(Boolean isPopular);
 
